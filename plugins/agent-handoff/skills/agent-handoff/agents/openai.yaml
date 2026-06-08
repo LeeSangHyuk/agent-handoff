@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Handoff"
+  short_description: "Maintain a concise HANDOFF.md for long AI coding sessions."
+  default_prompt: "Use Agent Handoff to keep this coding session aligned and update HANDOFF.md."

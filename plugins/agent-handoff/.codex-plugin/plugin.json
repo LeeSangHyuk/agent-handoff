@@ -1,0 +1,24 @@
+{
+  "name": "agent-handoff",
+  "version": "0.1.0",
+  "description": "Keep long AI coding sessions aligned with a concise project HANDOFF.md.",
+  "author": {
+    "name": "Agent Handoff"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Agent Handoff",
+    "shortDescription": "Maintain HANDOFF.md for long Codex sessions.",
+    "longDescription": "Agent Handoff helps Codex preserve the original goal, current focus, key decisions, failed attempts, changed files, and next steps in a concise HANDOFF.md that future sessions or other AI coding agents can read.",
+    "developerName": "Agent Handoff",
+    "category": "Productivity",
+    "capabilities": [
+      "skills"
+    ],
+    "defaultPrompt": [
+      "Use Agent Handoff for this project.",
+      "Read HANDOFF.md and continue from the current focus.",
+      "Update HANDOFF.md before ending meaningful work."
+    ]
+  }
+}
