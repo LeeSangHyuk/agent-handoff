@@ -35,6 +35,7 @@ Improve the README positioning so Agent Handoff is framed as a useful AI coding 
 - Added initial Claude Code and OpenCode plugin scaffolds for shareable adapters.
 - Installed Claude Code/OpenCode CLIs and validated the new plugin scaffolds in their native runtimes.
 - Rewrote `README.md` around the user pain: stop re-explaining projects to every new AI coding session.
+- Added Korean documentation files for README, portability, and validation so Korean users can evaluate the project more easily.
 
 ## Failed Attempts
 
@@ -50,6 +51,7 @@ Improve the README positioning so Agent Handoff is framed as a useful AI coding 
 - `plugins/agent-handoff/.codex-plugin/plugin.json`: plugin metadata and cachebuster version.
 - `plugins/agent-handoff/skills/agent-handoff/assets/HANDOFF.template.md`: template for new handoff files.
 - `README.md`, `VALIDATION.md`: project docs and validation evidence.
+- `README.ko.md`, `PORTABILITY.ko.md`, `VALIDATION.ko.md`: Korean user-facing documentation.
 - `AGENTS.md`, `CLAUDE.md`, `PORTABILITY.md`: cross-agent and company rollout support.
 - `plugins/claude-code/agent-handoff`: Claude Code plugin scaffold.
 - `plugins/opencode/agent-handoff`: OpenCode plugin scaffold.
@@ -58,7 +60,7 @@ Improve the README positioning so Agent Handoff is framed as a useful AI coding 
 
 ## Next Steps
 
-1. Commit and push the README positioning update.
+1. Commit and push the Korean documentation update.
 2. Run a clean-clone install test.
 3. Try OpenCode in a company/sample repo using `AGENTS.md`, `HANDOFF.md`, and `.opencode/plugins/agent-handoff.js`.
 4. Decide whether OpenCode plugin should become an npm package or stay as local `.opencode/plugins` files for now.

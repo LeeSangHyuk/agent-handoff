@@ -1,5 +1,7 @@
 # Agent Handoff
 
+[한국어 문서](README.ko.md)
+
 Stop re-explaining your project to every new AI coding session.
 
 Agent Handoff is a lightweight Markdown handoff system for Codex, Claude Code, and OpenCode. It keeps the current goal, key decisions, failed attempts, changed files, and next steps in reviewable repo files so a fresh agent can continue without starting from zero.
