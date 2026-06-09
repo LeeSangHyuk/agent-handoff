@@ -1,14 +1,18 @@
 # Agent Handoff
 
-[한국어 문서](README.ko.md)
+[Korean docs](README.ko.md)
 
 Stop re-explaining your project to every new AI coding session.
 
-Agent Handoff is a lightweight Markdown handoff system for Codex, Claude Code, and OpenCode. It keeps the current goal, key decisions, failed attempts, changed files, and next steps in reviewable repo files so a fresh agent can continue without starting from zero.
+Agent Handoff is a lightweight Markdown handoff system for Codex, Claude Code,
+and OpenCode. It keeps the current goal, key decisions, failed attempts, changed
+files, and next steps in reviewable repo files so a fresh agent can continue
+without starting from zero.
 
 ## Why
 
-Long AI coding sessions lose shape. Context gets compacted, fresh sessions forget why decisions were made, and different agents repeat failed attempts.
+Long AI coding sessions lose shape. Context gets compacted, fresh sessions
+forget why decisions were made, and different agents repeat failed attempts.
 
 Agent Handoff keeps the durable working state in files that live with the code:
 
@@ -17,6 +21,29 @@ Agent Handoff keeps the durable working state in files that live with the code:
 - `AGENTS.md` / `CLAUDE.md`: project rules for agents that read repo instructions.
 
 The goal is not generic memory. The goal is **auditable AI coding session handoff**.
+
+## Why Not Just AGENTS.md?
+
+`AGENTS.md` tells an agent how to work in a repo.
+
+Agent Handoff tells the next agent what just happened.
+
+```text
+README.md       = what this project is
+AGENTS.md       = how agents should work here
+HANDOFF.md      = where the work currently stands
+handoffs/*.md   = themed detail the next agent may need
+```
+
+That distinction matters because `AGENTS.md` should stay stable, while
+`HANDOFF.md` changes as the project moves.
+
+Agent Handoff also adds:
+
+- a required handoff shape,
+- themed detail files,
+- plugin scaffolds for Codex, Claude Code, and OpenCode,
+- validation records that prove the workflow was tested.
 
 ## What It Solves
 
@@ -44,6 +71,26 @@ Still to validate:
 - Real Claude Code agent behavior beyond plugin install/details.
 
 See `VALIDATION.md` for exact commands and results.
+
+## Quick Start
+
+For a repo that only needs the file convention, copy:
+
+```text
+AGENTS.md
+CLAUDE.md
+HANDOFF.md
+handoffs/
+```
+
+Then start a fresh AI coding session and say:
+
+```text
+handoff
+```
+
+For tool-specific plugin setup, use the Codex, Claude Code, or OpenCode
+sections below.
 
 ## Supported Surfaces
 
@@ -77,7 +124,13 @@ Alternatively, install or enable `agent-handoff` from the Codex plugin UI after 
 
 If you cloned the repo somewhere else, replace `D:\AgentHandoff` with your local clone path.
 
-After changing plugin files, reinstall with the same `codex plugin add agent-handoff@agent-handoff-local` command so Codex picks up the updated cachebuster version.
+After changing plugin files, reinstall with:
+
+```powershell
+codex plugin add agent-handoff@agent-handoff-local
+```
+
+This lets Codex pick up the updated cachebuster version.
 
 ## Install In Claude Code
 
@@ -133,6 +186,8 @@ Expected result:
 4. After meaningful work, it updates `HANDOFF.md` briefly.
 5. Detailed notes go into the relevant themed file.
 
+See `examples/before-after.md` for a concrete before/after handoff example.
+
 ## Themed Handoffs
 
 `HANDOFF.md` is the first-read index and current-state summary. Longer-lived detail belongs in theme files:
@@ -158,9 +213,12 @@ This keeps the next agent from reading a long chronological log before it can ac
 |-- AGENTS.md
 |-- CLAUDE.md
 |-- HANDOFF.md
+|-- LICENSE
 |-- PORTABILITY.md
 |-- README.md
 |-- VALIDATION.md
+|-- examples/
+|   `-- before-after.md
 |-- handoffs/
 |   |-- plugin-install.md
 |   |-- product.md

@@ -6,7 +6,8 @@ Build a separate Agent Handoff repository instead of mixing the experiment into 
 
 ## Current Focus
 
-Improve the README positioning so Agent Handoff is framed as a useful AI coding session handoff system, not just a small Codex skill experiment.
+Address product-readiness feedback by improving README differentiation,
+adding examples, and making the repo feel less like only a file convention.
 
 ## Key Decisions
 
@@ -36,6 +37,9 @@ Improve the README positioning so Agent Handoff is framed as a useful AI coding 
 - Installed Claude Code/OpenCode CLIs and validated the new plugin scaffolds in their native runtimes.
 - Rewrote `README.md` around the user pain: stop re-explaining projects to every new AI coding session.
 - Added Korean documentation files for README, portability, and validation so Korean users can evaluate the project more easily.
+- Added a README section explaining how Agent Handoff differs from `AGENTS.md`.
+- Added `examples/before-after.md` to show the workflow concretely.
+- Added an MIT `LICENSE`.
 
 ## Failed Attempts
 
@@ -52,6 +56,8 @@ Improve the README positioning so Agent Handoff is framed as a useful AI coding 
 - `plugins/agent-handoff/skills/agent-handoff/assets/HANDOFF.template.md`: template for new handoff files.
 - `README.md`, `VALIDATION.md`: project docs and validation evidence.
 - `README.ko.md`, `PORTABILITY.ko.md`, `VALIDATION.ko.md`: Korean user-facing documentation.
+- `examples/before-after.md`: concrete handoff before/after example.
+- `LICENSE`: project license.
 - `AGENTS.md`, `CLAUDE.md`, `PORTABILITY.md`: cross-agent and company rollout support.
 - `plugins/claude-code/agent-handoff`: Claude Code plugin scaffold.
 - `plugins/opencode/agent-handoff`: OpenCode plugin scaffold.
@@ -60,10 +66,10 @@ Improve the README positioning so Agent Handoff is framed as a useful AI coding 
 
 ## Next Steps
 
-1. Commit and push the Korean documentation update.
+1. Commit and push the README/example/license update.
 2. Run a clean-clone install test.
 3. Try OpenCode in a company/sample repo using `AGENTS.md`, `HANDOFF.md`, and `.opencode/plugins/agent-handoff.js`.
-4. Decide whether OpenCode plugin should become an npm package or stay as local `.opencode/plugins` files for now.
+4. Decide whether to add a minimal CLI with `init`, `validate`, and `compact`.
 
 ## Open Questions
 

@@ -2,7 +2,10 @@
 
 새 AI 코딩 세션을 열 때마다 프로젝트를 다시 설명하지 마세요.
 
-Agent Handoff는 Codex, Claude Code, OpenCode에서 함께 쓸 수 있는 가벼운 Markdown 기반 인수인계 시스템입니다. 현재 목표, 중요한 결정, 실패한 시도, 변경 파일, 다음 단계를 Git으로 검토 가능한 repo 파일에 남겨서 새 에이전트가 처음부터 다시 시작하지 않게 합니다.
+Agent Handoff는 Codex, Claude Code, OpenCode에서 함께 쓸 수 있는 가벼운
+Markdown 기반 인수인계 시스템입니다. 현재 목표, 중요한 결정, 실패한 시도,
+변경 파일, 다음 단계를 Git으로 검토 가능한 repo 파일에 남겨서 새 에이전트가
+처음부터 다시 시작하지 않게 합니다.
 
 ## 왜 필요한가
 
@@ -15,6 +18,29 @@ Agent Handoff는 코드와 함께 버전 관리되는 파일에 작업 상태를
 - `AGENTS.md` / `CLAUDE.md`: repo 규칙을 읽는 에이전트용 프로젝트 지침
 
 목표는 일반적인 AI memory가 아닙니다. 목표는 **검토 가능한 AI 코딩 세션 인수인계**입니다.
+
+## AGENTS.md만 있으면 되는 것 아닌가?
+
+`AGENTS.md`는 agent에게 repo에서 어떻게 일해야 하는지 알려주는 규칙 파일입니다.
+
+Agent Handoff는 다음 agent에게 지금 작업이 어디까지 왔는지 알려줍니다.
+
+```text
+README.md       = 프로젝트 설명
+AGENTS.md       = agent 작업 규칙
+HANDOFF.md      = 현재 작업 상태
+handoffs/*.md   = 다음 agent에게 필요한 테마별 상세 맥락
+```
+
+이 차이가 중요합니다. `AGENTS.md`는 비교적 안정적인 규칙이어야 하고,
+`HANDOFF.md`는 프로젝트 진행에 따라 계속 갱신되는 현재 상태판이어야 합니다.
+
+Agent Handoff는 여기에 다음을 더합니다.
+
+- 정해진 handoff 문서 구조
+- 테마별 상세 파일
+- Codex, Claude Code, OpenCode용 plugin scaffold
+- workflow가 실제로 검증됐다는 기록
 
 ## 해결하는 문제
 
@@ -42,6 +68,25 @@ Agent Handoff는 코드와 함께 버전 관리되는 파일에 작업 상태를
 - Claude Code에서 plugin install/details를 넘어 실제 agent 행동 검증
 
 정확한 검증 명령과 결과는 [VALIDATION.ko.md](VALIDATION.ko.md)를 참고하세요.
+
+## 빠른 시작
+
+파일 규약만 먼저 써보고 싶다면 아래 파일을 프로젝트에 복사합니다.
+
+```text
+AGENTS.md
+CLAUDE.md
+HANDOFF.md
+handoffs/
+```
+
+그 다음 새 AI 코딩 세션에서 이렇게 말합니다.
+
+```text
+handoff
+```
+
+도구별 플러그인 설치는 아래 Codex, Claude Code, OpenCode 섹션을 참고하세요.
 
 ## 지원 대상
 
@@ -129,6 +174,8 @@ handoff
 4. 의미 있는 작업 후 `HANDOFF.md`를 짧게 업데이트합니다.
 5. 상세 기록은 관련 테마 파일에 남깁니다.
 
+구체적인 before/after 예시는 `examples/before-after.md`를 참고하세요.
+
 ## 테마별 Handoff
 
 `HANDOFF.md`는 첫 번째로 읽는 현재 상태 인덱스입니다. 오래 유지될 상세 기록은 테마 파일에 둡니다.
@@ -154,12 +201,15 @@ handoffs/
 |-- AGENTS.md
 |-- CLAUDE.md
 |-- HANDOFF.md
+|-- LICENSE
 |-- PORTABILITY.md
 |-- PORTABILITY.ko.md
 |-- README.md
 |-- README.ko.md
 |-- VALIDATION.md
 |-- VALIDATION.ko.md
+|-- examples/
+|   `-- before-after.md
 |-- handoffs/
 |   |-- plugin-install.md
 |   |-- product.md

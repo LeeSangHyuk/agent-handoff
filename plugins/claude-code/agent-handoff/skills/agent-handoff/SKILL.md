@@ -1,6 +1,9 @@
 ---
 name: agent-handoff
-description: Maintain concise HANDOFF.md and themed handoff files for long Claude Code sessions. Use when the user asks to continue from previous work, preserve decisions/failures/next steps, prepare a handoff, or avoid context loss.
+description: >-
+  Maintain concise HANDOFF.md and themed handoff files for long Claude Code
+  sessions. Use when the user asks to continue from previous work, preserve
+  decisions, failures, next steps, prepare a handoff, or avoid context loss.
 ---
 
 # Agent Handoff

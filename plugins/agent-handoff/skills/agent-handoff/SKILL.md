@@ -1,13 +1,20 @@
 ---
 name: agent-handoff
-description: Maintain a concise project HANDOFF.md for long AI coding sessions. Use when the user asks to keep Codex aligned across long work, preserve current goals/decisions/failures/next steps, continue from a previous session, prepare handoff notes for another AI coding agent, or prevent context loss after compaction or conversation resets.
+description: >-
+  Maintain a concise project HANDOFF.md for long AI coding sessions. Use when
+  the user asks to keep Codex aligned across long work, preserve current goals,
+  decisions, failures, next steps, continue from a previous session, prepare
+  handoff notes for another AI coding agent, or prevent context loss after
+  compaction or conversation resets.
 ---
 
 # Agent Handoff
 
 ## Overview
 
-Keep the important parts of a coding session outside the model context window. `HANDOFF.md` is not a README or project rule file; it records the current work state and points to themed handoff files for durable detail.
+Keep the important parts of a coding session outside the model context window.
+`HANDOFF.md` is not a README or project rule file; it records the current work
+state and points to themed handoff files for durable detail.
 
 Core distinction:
 
@@ -26,7 +33,9 @@ When this skill triggers:
 4. If `HANDOFF.md` does not exist and the task is likely to span multiple turns or sessions, create it from `assets/HANDOFF.template.md`.
 5. Treat `Original Goal`, `Current Focus`, `Relevant Context Files`, and `Next Steps` as the highest-signal sections.
 
-Do not let `HANDOFF.md` override explicit user instructions in the current prompt. If the current prompt conflicts with the handoff, follow the current prompt and record the changed direction when updating the file.
+Do not let `HANDOFF.md` override explicit user instructions in the current
+prompt. If the current prompt conflicts with the handoff, follow the current
+prompt and record the changed direction when updating the file.
 
 ## During Work
 
@@ -130,7 +139,10 @@ Before ending work, quickly verify:
 
 ## Safety
 
-Do not store secrets, API keys, private credentials, or sensitive user data in `HANDOFF.md`. If a task involves confidential code or workplace context, summarize operationally and avoid copying proprietary details unless the user explicitly asks.
+Do not store secrets, API keys, private credentials, or sensitive user data in
+`HANDOFF.md`. If a task involves confidential code or workplace context,
+summarize operationally and avoid copying proprietary details unless the user
+explicitly asks.
 
 ## Template
 
