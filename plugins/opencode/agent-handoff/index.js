@@ -1,4 +1,12 @@
-export const AgentHandoffPlugin = async () => {
+export const AgentHandoffPlugin = async ({ client } = {}) => {
+  await client?.app?.log?.({
+    body: {
+      service: "agent-handoff",
+      level: "info",
+      message: "Agent Handoff OpenCode plugin initialized",
+    },
+  });
+
   return {
     event: async ({ event }) => {
       if (event?.type !== "session.compacted") {

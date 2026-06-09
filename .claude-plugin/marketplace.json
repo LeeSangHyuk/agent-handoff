@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "agent-handoff-claude-local",
+  "version": "0.1.0",
+  "description": "Local Agent Handoff plugins for Claude Code.",
+  "owner": {
+    "name": "Agent Handoff"
+  },
+  "plugins": [
+    {
+      "name": "agent-handoff",
+      "description": "Maintain concise themed handoff files for long Claude Code sessions.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Agent Handoff"
+      },
+      "source": "./plugins/claude-code/agent-handoff",
+      "category": "productivity"
+    }
+  ]
+}

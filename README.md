@@ -19,6 +19,7 @@ Core idea:
 - A reusable `HANDOFF.template.md` asset.
 - A `VALIDATION.md` checklist for static and manual smoke tests.
 - A repo-local Codex marketplace at `.agents/plugins/marketplace.json`.
+- A repo-local Claude Code marketplace at `.claude-plugin/marketplace.json`.
 - A themed handoff layout under `handoffs/`.
 - A `PORTABILITY.md` note for OpenCode, Claude Code, and company rollout.
 - `AGENTS.md` and `CLAUDE.md` project rules for non-Codex agents.
@@ -46,6 +47,17 @@ Alternatively, install or enable `agent-handoff` from the Codex plugin UI after 
 If you cloned the repo somewhere else, replace `D:\AgentHandoff` with your local clone path.
 
 After changing plugin files, reinstall with the same `codex plugin add agent-handoff@agent-handoff-local` command so Codex picks up the updated cachebuster version.
+
+## Install In Claude Code
+
+This repository also includes a local Claude Code marketplace:
+
+```powershell
+claude plugin marketplace add D:\AgentHandoff
+claude plugin install agent-handoff@agent-handoff-claude-local --scope local
+```
+
+If you cloned the repo somewhere else, replace `D:\AgentHandoff` with your local clone path.
 
 ## Smoke Test
 
@@ -76,6 +88,8 @@ This keeps the next agent from reading a long chronological log before it can ac
 .
 |-- .agents/
 |   `-- plugins/marketplace.json
+|-- .claude-plugin/
+|   `-- marketplace.json
 |-- AGENTS.md
 |-- CLAUDE.md
 |-- HANDOFF.md

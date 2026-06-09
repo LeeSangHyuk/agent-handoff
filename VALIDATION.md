@@ -38,6 +38,18 @@ Latest local result on 2026-06-09:
 - Claude Code plugin manifest JSON parses.
 - OpenCode plugin package JSON parses.
 
+Runtime validation on 2026-06-09:
+
+- Installed Claude Code CLI `2.1.168` with winget.
+- Installed OpenCode CLI `1.16.2` with winget.
+- `claude plugin validate D:\AgentHandoff` passed for `.claude-plugin/marketplace.json`.
+- `claude plugin validate D:\AgentHandoff\plugins\claude-code\agent-handoff` passed.
+- `claude plugin marketplace add D:\AgentHandoff` succeeded and registered `agent-handoff-claude-local`.
+- `claude plugin install agent-handoff@agent-handoff-claude-local --scope local` succeeded.
+- `claude plugin details agent-handoff@agent-handoff-claude-local` showed one skill: `agent-handoff`.
+- OpenCode loaded `.opencode/plugins/agent-handoff.js` from a temporary smoke-test project and printed `Agent Handoff OpenCode plugin initialized`.
+- `opencode run --demo` then failed because `--demo` requires `--interactive`, but that happened after plugin loading, so plugin startup validation passed.
+
 Fresh-session plugin smoke test on 2026-06-09:
 
 - User started a separate Codex session and prompted only `handoff`.

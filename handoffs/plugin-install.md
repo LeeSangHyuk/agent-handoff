@@ -47,3 +47,45 @@ codex plugin add agent-handoff@agent-handoff-local
 - OpenCode: `plugins/opencode/agent-handoff`
 
 These are initial scaffolds and still need runtime validation in their native tools.
+
+## Claude Code Marketplace
+
+Claude Code marketplace path:
+
+```text
+.claude-plugin/marketplace.json
+```
+
+Marketplace name:
+
+```text
+agent-handoff-claude-local
+```
+
+Install commands:
+
+```powershell
+claude plugin marketplace add D:\AgentHandoff
+claude plugin install agent-handoff@agent-handoff-claude-local --scope local
+```
+
+Validated on 2026-06-09:
+
+- Claude Code CLI version: `2.1.168`.
+- Marketplace validation passed.
+- Plugin validation passed.
+- Marketplace add succeeded.
+- Plugin install succeeded in local scope.
+- Plugin details showed one skill: `agent-handoff`.
+
+Local-scope Claude install created `.claude/settings.local.json`; keep that file gitignored.
+
+## OpenCode Runtime Smoke
+
+Validated on 2026-06-09:
+
+- OpenCode CLI version: `1.16.2`.
+- Copied `plugins/opencode/agent-handoff/index.js` into `tmp/opencode-plugin-smoke/.opencode/plugins/agent-handoff.js`.
+- Ran `opencode run --demo "hello" --print-logs --log-level DEBUG --format json`.
+- Logs showed OpenCode loading the plugin file and printing `Agent Handoff OpenCode plugin initialized`.
+- The command then failed because `--demo` requires `--interactive`, but plugin loading had already succeeded.

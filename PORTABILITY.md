@@ -50,7 +50,7 @@ plugins/opencode/agent-handoff/
 
 ## Claude Code
 
-Claude Code supports project memory through `CLAUDE.md` or `.claude/CLAUDE.md`. This repository includes a committed `CLAUDE.md` for the same handoff behavior. Claude Code also supports shareable plugins and marketplaces; this repository includes an initial Claude Code plugin scaffold under `plugins/claude-code/agent-handoff`.
+Claude Code supports project memory through `CLAUDE.md` or `.claude/CLAUDE.md`. This repository includes a committed `CLAUDE.md` for the same handoff behavior. Claude Code also supports shareable plugins and marketplaces; this repository includes a Claude Code marketplace at `.claude-plugin/marketplace.json` and a plugin scaffold under `plugins/claude-code/agent-handoff`.
 
 Recommended company-safe starting point:
 
@@ -58,6 +58,8 @@ Recommended company-safe starting point:
 CLAUDE.md
 HANDOFF.md
 handoffs/
+.claude-plugin/marketplace.json
+plugins/claude-code/agent-handoff/
 ```
 
 Optional hardening:

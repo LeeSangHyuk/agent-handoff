@@ -8,3 +8,4 @@ temp/
 .env.*
 .tools/
 gh.zip
+.claude/settings.local.json
