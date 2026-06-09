@@ -6,7 +6,7 @@ Build a separate Agent Handoff repository instead of mixing the experiment into 
 
 ## Current Focus
 
-Convert Agent Handoff from a single accumulating handoff file into a themed handoff system that keeps `HANDOFF.md` concise while preserving deeper context in `handoffs/`.
+Improve the README positioning so Agent Handoff is framed as a useful AI coding session handoff system, not just a small Codex skill experiment.
 
 ## Key Decisions
 
@@ -34,6 +34,7 @@ Convert Agent Handoff from a single accumulating handoff file into a themed hand
 - Updated the plugin version cachebuster so Codex can pick up the revised skill after reinstall.
 - Added initial Claude Code and OpenCode plugin scaffolds for shareable adapters.
 - Installed Claude Code/OpenCode CLIs and validated the new plugin scaffolds in their native runtimes.
+- Rewrote `README.md` around the user pain: stop re-explaining projects to every new AI coding session.
 
 ## Failed Attempts
 
@@ -57,9 +58,9 @@ Convert Agent Handoff from a single accumulating handoff file into a themed hand
 
 ## Next Steps
 
-1. Validate the updated themed handoff skill.
-2. Commit and push the cross-agent runtime validation results.
-3. Run a clean-clone install test.
+1. Commit and push the README positioning update.
+2. Run a clean-clone install test.
+3. Try OpenCode in a company/sample repo using `AGENTS.md`, `HANDOFF.md`, and `.opencode/plugins/agent-handoff.js`.
 4. Decide whether OpenCode plugin should become an npm package or stay as local `.opencode/plugins` files for now.
 
 ## Open Questions

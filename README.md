@@ -1,39 +1,68 @@
 # Agent Handoff
 
-Agent Handoff is a local Codex plugin experiment for keeping long AI coding sessions aligned with a concise project `HANDOFF.md`.
+Stop re-explaining your project to every new AI coding session.
+
+Agent Handoff is a lightweight Markdown handoff system for Codex, Claude Code, and OpenCode. It keeps the current goal, key decisions, failed attempts, changed files, and next steps in reviewable repo files so a fresh agent can continue without starting from zero.
 
 ## Why
 
-AI coding sessions get messy over time. The model can lose the original goal, repeat failed attempts, or forget why a decision was made. Agent Handoff keeps the durable working state in a markdown file that a fresh Codex session or another AI coding agent can read.
+Long AI coding sessions lose shape. Context gets compacted, fresh sessions forget why decisions were made, and different agents repeat failed attempts.
 
-Core idea:
+Agent Handoff keeps the durable working state in files that live with the code:
 
-- `README.md` explains the project.
-- `AGENTS.md` explains the rules.
-- `HANDOFF.md` explains what just happened.
+- `HANDOFF.md`: the short first-read index and current-state summary.
+- `handoffs/*.md`: themed detail files for product, install, validation, roadmap, or team-specific topics.
+- `AGENTS.md` / `CLAUDE.md`: project rules for agents that read repo instructions.
 
-## What This Includes
+The goal is not generic memory. The goal is **auditable AI coding session handoff**.
 
-- A Codex plugin scaffold at `plugins/agent-handoff`.
-- An `agent-handoff` skill that tells Codex how to maintain `HANDOFF.md`.
-- A reusable `HANDOFF.template.md` asset.
-- A `VALIDATION.md` checklist for static and manual smoke tests.
-- A repo-local Codex marketplace at `.agents/plugins/marketplace.json`.
-- A repo-local Claude Code marketplace at `.claude-plugin/marketplace.json`.
-- A themed handoff layout under `handoffs/`.
-- A `PORTABILITY.md` note for OpenCode, Claude Code, and company rollout.
-- `AGENTS.md` and `CLAUDE.md` project rules for non-Codex agents.
-- Initial Claude Code and OpenCode plugin scaffolds under `plugins/claude-code/` and `plugins/opencode/`.
+## What It Solves
+
+- Resume long AI coding sessions without re-explaining the project.
+- Preserve decisions and failed attempts across context resets.
+- Keep AI-generated project state visible in Git diffs.
+- Share the same handoff convention across Codex, Claude Code, and OpenCode.
+- Start locally with Markdown before adding hooks, MCP, or a hosted service.
 
 ## Current Status
 
-This is an MVP scaffold, not a finished marketplace product. The first test is simple: install/use the skill locally, run a long Codex task, then start a fresh session and see whether `HANDOFF.md` reduces re-explanation.
+This is an MVP plugin prototype and file convention, not a polished marketplace product.
 
-Read `VALIDATION.md` before calling the MVP usable. A successful MVP should pass the static plugin/skill checks and the manual fresh-session smoke test.
+Validated so far:
+
+- Codex plugin manifest and skill validation pass.
+- Codex fresh-session smoke test passed with a short `handoff` prompt.
+- Claude Code marketplace validation, plugin validation, marketplace add, and local plugin install passed.
+- OpenCode loaded the local plugin scaffold from `.opencode/plugins` in a smoke-test project.
+
+Still to validate:
+
+- Clean-clone install flow.
+- Real OpenCode agent behavior against a company or sample repo.
+- Real Claude Code agent behavior beyond plugin install/details.
+
+See `VALIDATION.md` for exact commands and results.
+
+## Supported Surfaces
+
+```text
+Codex
+  .agents/plugins/marketplace.json
+  plugins/agent-handoff/.codex-plugin/plugin.json
+  plugins/agent-handoff/skills/agent-handoff/SKILL.md
+
+Claude Code
+  .claude-plugin/marketplace.json
+  plugins/claude-code/agent-handoff/.claude-plugin/plugin.json
+  plugins/claude-code/agent-handoff/skills/agent-handoff/SKILL.md
+
+OpenCode
+  AGENTS.md
+  plugins/opencode/agent-handoff/index.js
+  plugins/opencode/agent-handoff/package.json
+```
 
 ## Install In Codex
-
-This repository includes a local marketplace file so Codex can discover the plugin from the repo.
 
 Add this repository root as a local marketplace:
 
@@ -50,7 +79,7 @@ After changing plugin files, reinstall with the same `codex plugin add agent-han
 
 ## Install In Claude Code
 
-This repository also includes a local Claude Code marketplace:
+This repository includes a local Claude Code marketplace:
 
 ```powershell
 claude plugin marketplace add D:\AgentHandoff
@@ -59,14 +88,48 @@ claude plugin install agent-handoff@agent-handoff-claude-local --scope local
 
 If you cloned the repo somewhere else, replace `D:\AgentHandoff` with your local clone path.
 
+## Use With OpenCode
+
+For a local project test, copy the OpenCode plugin into a project's `.opencode/plugins/` directory:
+
+```text
+your-project/
+  .opencode/
+    plugins/
+      agent-handoff.js
+```
+
+Source file:
+
+```text
+plugins/opencode/agent-handoff/index.js
+```
+
+Also copy or adapt:
+
+```text
+AGENTS.md
+HANDOFF.md
+handoffs/
+```
+
+The OpenCode scaffold can later become an npm package listed in `opencode.json`.
+
 ## Smoke Test
 
-1. Start a fresh Codex session in this repository.
-2. Enable or ask for the `agent-handoff` plugin.
-3. Ask Codex to read `HANDOFF.md` before planning work.
-4. Make a small, meaningful project change.
-5. Confirm Codex updates `HANDOFF.md` before ending the turn.
-6. Start another fresh session and confirm it can continue from the handoff without re-explanation.
+In a fresh agent session, try:
+
+```text
+handoff
+```
+
+Expected result:
+
+1. The agent reads `HANDOFF.md`.
+2. It follows the current focus and next steps.
+3. It reads relevant files from `handoffs/`.
+4. After meaningful work, it updates `HANDOFF.md` briefly.
+5. Detailed notes go into the relevant themed file.
 
 ## Themed Handoffs
 
@@ -119,7 +182,8 @@ This keeps the next agent from reading a long chronological log before it can ac
 
 ## Planned Direction
 
-1. Validate the Codex skill workflow locally.
-2. Validate the themed handoff workflow in a fresh Codex session.
-3. Validate the Claude Code and OpenCode plugin scaffolds.
-4. Add hooks or MCP tools later for stronger automation.
+1. Run a clean-clone install test.
+2. Test OpenCode behavior in a real project.
+3. Test Claude Code behavior in a real project.
+4. Decide whether OpenCode should ship as an npm package.
+5. Add hooks or MCP tools only after the file workflow proves useful.
