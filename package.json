@@ -1,0 +1,30 @@
+{
+  "name": "agent-handoff",
+  "version": "0.1.0",
+  "description": "A lightweight Markdown handoff protocol and CLI for AI coding agents.",
+  "type": "module",
+  "bin": {
+    "agent-handoff": "./bin/agent-handoff.mjs"
+  },
+  "files": [
+    "bin/",
+    "templates/",
+    "plugins/opencode/agent-handoff/index.js",
+    "README.md",
+    "README.ko.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "validate": "node ./bin/agent-handoff.mjs validate .",
+    "compact": "node ./bin/agent-handoff.mjs compact ."
+  },
+  "keywords": [
+    "ai",
+    "coding-agent",
+    "handoff",
+    "codex",
+    "claude-code",
+    "opencode"
+  ],
+  "license": "MIT"
+}

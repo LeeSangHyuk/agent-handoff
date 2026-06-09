@@ -6,8 +6,8 @@ Build a separate Agent Handoff repository instead of mixing the experiment into 
 
 ## Current Focus
 
-Address product-readiness feedback by improving README differentiation,
-adding examples, and making the repo feel less like only a file convention.
+Pivot the project toward a minimal CLI plus handoff protocol so it provides
+install-immediate value beyond plugin scaffolds and documentation.
 
 ## Key Decisions
 
@@ -40,6 +40,9 @@ adding examples, and making the repo feel less like only a file convention.
 - Added a README section explaining how Agent Handoff differs from `AGENTS.md`.
 - Added `examples/before-after.md` to show the workflow concretely.
 - Added an MIT `LICENSE`.
+- Added a repo-local Node CLI scaffold with `init`, `validate`, and `compact`.
+- Added reusable templates for `HANDOFF.md`, `AGENTS.md`, `CLAUDE.md`, and `handoffs/`.
+- Validated the CLI with portable Node.js because global Node.js MSI install was cancelled at the admin prompt.
 
 ## Failed Attempts
 
@@ -58,6 +61,7 @@ adding examples, and making the repo feel less like only a file convention.
 - `README.ko.md`, `PORTABILITY.ko.md`, `VALIDATION.ko.md`: Korean user-facing documentation.
 - `examples/before-after.md`: concrete handoff before/after example.
 - `LICENSE`: project license.
+- `package.json`, `bin/agent-handoff.mjs`, `templates/`: minimal CLI scaffold.
 - `AGENTS.md`, `CLAUDE.md`, `PORTABILITY.md`: cross-agent and company rollout support.
 - `plugins/claude-code/agent-handoff`: Claude Code plugin scaffold.
 - `plugins/opencode/agent-handoff`: OpenCode plugin scaffold.
@@ -66,10 +70,10 @@ adding examples, and making the repo feel less like only a file convention.
 
 ## Next Steps
 
-1. Commit and push the README/example/license update.
+1. Commit and push the minimal CLI scaffold.
 2. Run a clean-clone install test.
-3. Try OpenCode in a company/sample repo using `AGENTS.md`, `HANDOFF.md`, and `.opencode/plugins/agent-handoff.js`.
-4. Decide whether to add a minimal CLI with `init`, `validate`, and `compact`.
+3. Try OpenCode in a company/sample repo using the CLI-generated files.
+4. Decide whether `compact` should remain report-only or offer an interactive rewrite mode.
 
 ## Open Questions
 

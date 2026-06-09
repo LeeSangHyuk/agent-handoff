@@ -11,6 +11,7 @@ python C:\Users\HYUK\.codex\skills\.system\plugin-creator\scripts\validate_plugi
 python C:\Users\HYUK\.codex\skills\.system\skill-creator\scripts\quick_validate.py D:\AgentHandoff\plugins\agent-handoff\skills\agent-handoff
 python -m json.tool D:\AgentHandoff\plugins\claude-code\agent-handoff\.claude-plugin\plugin.json
 python -m json.tool D:\AgentHandoff\plugins\opencode\agent-handoff\package.json
+node D:\AgentHandoff\bin\agent-handoff.mjs validate D:\AgentHandoff
 ```
 
 기대 결과:
@@ -21,6 +22,7 @@ python -m json.tool D:\AgentHandoff\plugins\opencode\agent-handoff\package.json
 - `HANDOFF.md`는 짧게 유지되고 관련 theme file을 가리킵니다.
 - Claude Code plugin manifest JSON이 파싱됩니다.
 - OpenCode plugin package JSON이 파싱됩니다.
+- CLI `validate`가 repository에서 통과합니다.
 
 `yaml` 모듈이 없어서 실패하면 해당 Python 환경에 `PyYAML`을 설치하고 다시 실행합니다.
 
@@ -37,6 +39,7 @@ python -m json.tool D:\AgentHandoff\plugins\opencode\agent-handoff\package.json
 - 캐시된 `plugin.json`과 `SKILL.md`는 repo 파일과 SHA-256 기준으로 일치했습니다.
 - Claude Code plugin manifest JSON 파싱 통과
 - OpenCode plugin package JSON 파싱 통과
+- `init`, `validate`, `compact`를 가진 CLI scaffold 추가
 
 2026-06-09 runtime 검증 결과:
 
@@ -50,6 +53,17 @@ python -m json.tool D:\AgentHandoff\plugins\opencode\agent-handoff\package.json
 - OpenCode 임시 프로젝트에서 `.opencode/plugins/agent-handoff.js` 로드 확인
 - OpenCode 로그에서 `Agent Handoff OpenCode plugin initialized` 확인
 - `opencode run --demo`는 이후 `--demo requires --interactive`로 실패했지만, 플러그인 로드는 이미 성공했으므로 startup 검증은 통과로 봅니다.
+
+2026-06-10 CLI 검증 결과:
+
+- winget을 통한 전역 Node.js LTS 설치는 MSI 관리자 권한 프롬프트 단계에서 취소되었습니다.
+- 로컬 smoke test를 위해 portable Node.js `v24.16.0`을 `.tools/`에 다운로드했습니다.
+- `node bin/agent-handoff.mjs --help`가 CLI 사용법을 출력했습니다.
+- `node bin/agent-handoff.mjs validate .`가 이 repository에서 통과했습니다.
+- `node bin/agent-handoff.mjs compact .`는 오래된 완료 기록을 theme file로 옮기라는 제안을 출력했습니다.
+- `node bin/agent-handoff.mjs init tmp\cli-smoke`가 기대한 파일을 모두 생성했습니다.
+- `node bin/agent-handoff.mjs validate tmp\cli-smoke`가 통과했습니다.
+- `node bin/agent-handoff.mjs compact tmp\cli-smoke`는 생성된 `HANDOFF.md`가 이미 충분히 짧다고 출력했습니다.
 
 Codex fresh-session smoke test:
 
@@ -79,6 +93,23 @@ Cross-agent scaffold 결과:
 - `HANDOFF.md`는 정확한 섹션 구조를 유지하고 짧게 남습니다.
 - 실패한 시도와 열린 질문은 다음 세션에 도움이 될 때만 유지합니다.
 - 설치 후에는 `handoff` 같은 짧은 프롬프트로 workflow가 발동됩니다.
+
+## CLI Smoke Test
+
+임시 디렉터리에서 실행합니다.
+
+```powershell
+mkdir tmp\cli-smoke
+node bin\agent-handoff.mjs init tmp\cli-smoke
+node bin\agent-handoff.mjs validate tmp\cli-smoke
+node bin\agent-handoff.mjs compact tmp\cli-smoke
+```
+
+기대 결과:
+
+- `init`은 기존 파일을 덮어쓰지 않고 handoff 파일을 생성합니다.
+- `validate`는 생성된 구조에서 통과합니다.
+- `compact`는 `HANDOFF.md`가 이미 충분히 짧다고 출력하거나 낮은 위험의 제안만 출력합니다.
 
 ## 행동 검증
 

@@ -55,10 +55,12 @@ Agent Handoff also adds:
 
 ## Current Status
 
-This is an MVP plugin prototype and file convention, not a polished marketplace product.
+This is an MVP CLI, plugin prototype, and file convention, not a polished
+marketplace product.
 
 Validated so far:
 
+- Repo-local CLI scaffold exists with `init`, `validate`, and `compact`.
 - Codex plugin manifest and skill validation pass.
 - Codex fresh-session smoke test passed with a short `handoff` prompt.
 - Claude Code marketplace validation, plugin validation, marketplace add, and local plugin install passed.
@@ -74,13 +76,11 @@ See `VALIDATION.md` for exact commands and results.
 
 ## Quick Start
 
-For a repo that only needs the file convention, copy:
+For a repo that only needs the file convention, run:
 
-```text
-AGENTS.md
-CLAUDE.md
-HANDOFF.md
-handoffs/
+```powershell
+node bin/agent-handoff.mjs init path\to\your-project
+node bin/agent-handoff.mjs validate path\to\your-project
 ```
 
 Then start a fresh AI coding session and say:
@@ -89,8 +89,15 @@ Then start a fresh AI coding session and say:
 handoff
 ```
 
-For tool-specific plugin setup, use the Codex, Claude Code, or OpenCode
-sections below.
+For tool-specific plugin setup, use the Codex, Claude Code, or OpenCode sections below.
+
+The future npm shape is:
+
+```powershell
+npx agent-handoff init
+npx agent-handoff validate
+npx agent-handoff compact
+```
 
 ## Supported Surfaces
 
@@ -107,6 +114,7 @@ Claude Code
 
 OpenCode
   AGENTS.md
+  bin/agent-handoff.mjs
   plugins/opencode/agent-handoff/index.js
   plugins/opencode/agent-handoff/package.json
 ```
@@ -188,6 +196,22 @@ Expected result:
 
 See `examples/before-after.md` for a concrete before/after handoff example.
 
+## CLI
+
+The repo-local CLI is intentionally small:
+
+```powershell
+node bin/agent-handoff.mjs init .
+node bin/agent-handoff.mjs validate .
+node bin/agent-handoff.mjs compact .
+```
+
+Commands:
+
+- `init`: creates `HANDOFF.md`, `handoffs/`, `AGENTS.md`, and `CLAUDE.md` if missing.
+- `validate`: checks required sections, referenced context files, length, and secret-like values.
+- `compact`: reports when `HANDOFF.md` should be shortened or split into theme files.
+
 ## Themed Handoffs
 
 `HANDOFF.md` is the first-read index and current-state summary. Longer-lived detail belongs in theme files:
@@ -217,6 +241,8 @@ This keeps the next agent from reading a long chronological log before it can ac
 |-- PORTABILITY.md
 |-- README.md
 |-- VALIDATION.md
+|-- bin/
+|   `-- agent-handoff.mjs
 |-- examples/
 |   `-- before-after.md
 |-- handoffs/
@@ -224,6 +250,15 @@ This keeps the next agent from reading a long chronological log before it can ac
 |   |-- product.md
 |   |-- roadmap.md
 |   `-- validation.md
+|-- templates/
+|   |-- AGENTS.md
+|   |-- CLAUDE.md
+|   |-- HANDOFF.md
+|   `-- handoffs/
+|       |-- plugin-install.md
+|       |-- product.md
+|       |-- roadmap.md
+|       `-- validation.md
 `-- plugins/
     |-- agent-handoff/
     |   |-- .codex-plugin/plugin.json
@@ -245,5 +280,6 @@ This keeps the next agent from reading a long chronological log before it can ac
 1. Run a clean-clone install test.
 2. Test OpenCode behavior in a real project.
 3. Test Claude Code behavior in a real project.
-4. Decide whether OpenCode should ship as an npm package.
-5. Add hooks or MCP tools only after the file workflow proves useful.
+4. Harden and package the CLI for npm.
+5. Decide whether OpenCode should ship as an npm package.
+6. Add hooks or MCP tools only after the file workflow proves useful.

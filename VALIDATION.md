@@ -11,6 +11,7 @@ python C:\Users\HYUK\.codex\skills\.system\plugin-creator\scripts\validate_plugi
 python C:\Users\HYUK\.codex\skills\.system\skill-creator\scripts\quick_validate.py D:\AgentHandoff\plugins\agent-handoff\skills\agent-handoff
 python -m json.tool D:\AgentHandoff\plugins\claude-code\agent-handoff\.claude-plugin\plugin.json
 python -m json.tool D:\AgentHandoff\plugins\opencode\agent-handoff\package.json
+node D:\AgentHandoff\bin\agent-handoff.mjs validate D:\AgentHandoff
 ```
 
 Expected result:
@@ -21,6 +22,7 @@ Expected result:
 - `HANDOFF.md` stays concise and points to relevant theme files under `handoffs/`.
 - Claude Code plugin manifest JSON parses.
 - OpenCode plugin package JSON parses.
+- CLI `validate` passes for the repository.
 
 If validation fails because `yaml` is missing, install `PyYAML` in the Python environment used by the command and rerun the checks.
 
@@ -37,6 +39,7 @@ Latest local result on 2026-06-09:
 - The cached `plugin.json` and `SKILL.md` under `C:\Users\HYUK\.codex\plugins\cache\agent-handoff-local\agent-handoff\0.1.0` match the repository copies by SHA-256.
 - Claude Code plugin manifest JSON parses.
 - OpenCode plugin package JSON parses.
+- CLI scaffold added with `init`, `validate`, and `compact`.
 
 Runtime validation on 2026-06-09:
 
@@ -49,6 +52,17 @@ Runtime validation on 2026-06-09:
 - `claude plugin details agent-handoff@agent-handoff-claude-local` showed one skill: `agent-handoff`.
 - OpenCode loaded `.opencode/plugins/agent-handoff.js` from a temporary smoke-test project and printed `Agent Handoff OpenCode plugin initialized`.
 - `opencode run --demo` then failed because `--demo` requires `--interactive`, but that happened after plugin loading, so plugin startup validation passed.
+
+CLI validation on 2026-06-10:
+
+- Global Node.js LTS install through winget was cancelled at the MSI admin prompt.
+- Downloaded portable Node.js `v24.16.0` into `.tools/` for local smoke testing.
+- `node bin/agent-handoff.mjs --help` printed CLI usage.
+- `node bin/agent-handoff.mjs validate .` passed for this repository.
+- `node bin/agent-handoff.mjs compact .` reported that older completed work should move into a theme file.
+- `node bin/agent-handoff.mjs init tmp\cli-smoke` created all expected files.
+- `node bin/agent-handoff.mjs validate tmp\cli-smoke` passed.
+- `node bin/agent-handoff.mjs compact tmp\cli-smoke` reported that the generated `HANDOFF.md` is compact enough.
 
 Fresh-session plugin smoke test on 2026-06-09:
 
@@ -78,6 +92,23 @@ Expected result:
 - `HANDOFF.md` stays concise and uses the exact required sections.
 - Failed attempts and open questions are preserved only when they help the next session.
 - A short prompt such as `handoff` is enough to trigger the workflow after the plugin is installed.
+
+## CLI Smoke Test
+
+Use a temporary directory:
+
+```powershell
+mkdir tmp\cli-smoke
+node bin\agent-handoff.mjs init tmp\cli-smoke
+node bin\agent-handoff.mjs validate tmp\cli-smoke
+node bin\agent-handoff.mjs compact tmp\cli-smoke
+```
+
+Expected result:
+
+- `init` creates the handoff files without overwriting existing files.
+- `validate` passes on the generated structure.
+- `compact` prints that `HANDOFF.md` is already compact enough, or only low-risk suggestions.
 
 ## Behavioral Checks
 

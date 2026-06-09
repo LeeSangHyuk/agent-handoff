@@ -52,10 +52,12 @@ Agent Handoff는 여기에 다음을 더합니다.
 
 ## 현재 상태
 
-아직 완성된 marketplace 제품은 아니고, MVP 플러그인 프로토타입과 파일 규약입니다.
+아직 완성된 marketplace 제품은 아니고, MVP CLI, 플러그인 프로토타입,
+파일 규약입니다.
 
 검증된 것:
 
+- `init`, `validate`, `compact`를 가진 repo-local CLI scaffold 추가
 - Codex plugin manifest / skill 검증 통과
 - Codex 새 세션 smoke test 통과: 짧은 `handoff` 프롬프트로 동작 확인
 - Claude Code marketplace 검증, plugin 검증, marketplace add, local plugin install 통과
@@ -71,13 +73,11 @@ Agent Handoff는 여기에 다음을 더합니다.
 
 ## 빠른 시작
 
-파일 규약만 먼저 써보고 싶다면 아래 파일을 프로젝트에 복사합니다.
+파일 규약만 먼저 써보고 싶다면 CLI로 초기화합니다.
 
-```text
-AGENTS.md
-CLAUDE.md
-HANDOFF.md
-handoffs/
+```powershell
+node bin/agent-handoff.mjs init path\to\your-project
+node bin/agent-handoff.mjs validate path\to\your-project
 ```
 
 그 다음 새 AI 코딩 세션에서 이렇게 말합니다.
@@ -87,6 +87,14 @@ handoff
 ```
 
 도구별 플러그인 설치는 아래 Codex, Claude Code, OpenCode 섹션을 참고하세요.
+
+나중에 npm으로 배포하면 목표 사용법은 아래와 같습니다.
+
+```powershell
+npx agent-handoff init
+npx agent-handoff validate
+npx agent-handoff compact
+```
 
 ## 지원 대상
 
@@ -103,6 +111,7 @@ Claude Code
 
 OpenCode
   AGENTS.md
+  bin/agent-handoff.mjs
   plugins/opencode/agent-handoff/index.js
   plugins/opencode/agent-handoff/package.json
 ```
@@ -176,6 +185,22 @@ handoff
 
 구체적인 before/after 예시는 `examples/before-after.md`를 참고하세요.
 
+## CLI
+
+repo-local CLI는 작게 시작합니다.
+
+```powershell
+node bin/agent-handoff.mjs init .
+node bin/agent-handoff.mjs validate .
+node bin/agent-handoff.mjs compact .
+```
+
+명령:
+
+- `init`: `HANDOFF.md`, `handoffs/`, `AGENTS.md`, `CLAUDE.md`가 없으면 생성
+- `validate`: 필수 섹션, context file 존재 여부, 길이, secret-like 값 검사
+- `compact`: `HANDOFF.md`를 줄이거나 theme file로 옮겨야 할 내용을 report
+
 ## 테마별 Handoff
 
 `HANDOFF.md`는 첫 번째로 읽는 현재 상태 인덱스입니다. 오래 유지될 상세 기록은 테마 파일에 둡니다.
@@ -208,6 +233,8 @@ handoffs/
 |-- README.ko.md
 |-- VALIDATION.md
 |-- VALIDATION.ko.md
+|-- bin/
+|   `-- agent-handoff.mjs
 |-- examples/
 |   `-- before-after.md
 |-- handoffs/
@@ -215,6 +242,15 @@ handoffs/
 |   |-- product.md
 |   |-- roadmap.md
 |   `-- validation.md
+|-- templates/
+|   |-- AGENTS.md
+|   |-- CLAUDE.md
+|   |-- HANDOFF.md
+|   `-- handoffs/
+|       |-- plugin-install.md
+|       |-- product.md
+|       |-- roadmap.md
+|       `-- validation.md
 `-- plugins/
     |-- agent-handoff/
     |   |-- .codex-plugin/plugin.json
@@ -236,5 +272,6 @@ handoffs/
 1. clean clone install test
 2. 실제 프로젝트에서 OpenCode 행동 검증
 3. 실제 프로젝트에서 Claude Code 행동 검증
-4. OpenCode를 npm package로 배포할지 결정
-5. 파일 기반 워크플로가 충분히 유용하다고 확인된 뒤 hooks/MCP 추가 검토
+4. CLI를 npm 배포 가능한 형태로 강화
+5. OpenCode를 npm package로 배포할지 결정
+6. 파일 기반 워크플로가 충분히 유용하다고 확인된 뒤 hooks/MCP 추가 검토
