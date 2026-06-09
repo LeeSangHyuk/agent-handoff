@@ -1,6 +1,6 @@
 {
   "name": "agent-handoff",
-  "version": "0.1.0",
+  "version": "0.1.0+codex.20260609123226",
   "description": "Keep long AI coding sessions aligned with a concise project HANDOFF.md.",
   "author": {
     "name": "Agent Handoff"

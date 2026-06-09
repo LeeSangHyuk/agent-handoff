@@ -16,6 +16,7 @@ Expected result:
 - The plugin manifest is valid.
 - The skill has valid frontmatter.
 - No `[TODO: ...]` placeholders remain.
+- `HANDOFF.md` stays concise and points to relevant theme files under `handoffs/`.
 
 If validation fails because `yaml` is missing, install `PyYAML` in the Python environment used by the command and rerun the checks.
 
@@ -58,3 +59,5 @@ Expected result:
 - The handoff records failed attempts that should not be repeated.
 - The handoff records commands/tests and their outcomes when they matter for continuation.
 - The handoff never stores secrets, credentials, or unnecessary private details.
+- `HANDOFF.md` is an index/current-state file, not a chronological log.
+- Detailed install, validation, product, and roadmap notes go into themed files under `handoffs/`.

@@ -7,13 +7,14 @@ description: Maintain a concise project HANDOFF.md for long AI coding sessions. 
 
 ## Overview
 
-Keep the important parts of a coding session outside the model context window. `HANDOFF.md` is not a README or project rule file; it records what just happened and what should happen next.
+Keep the important parts of a coding session outside the model context window. `HANDOFF.md` is not a README or project rule file; it records the current work state and points to themed handoff files for durable detail.
 
 Core distinction:
 
 - `README.md` explains the project.
 - `AGENTS.md` explains the rules.
-- `HANDOFF.md` explains the current work state.
+- `HANDOFF.md` explains the current work state and index.
+- `handoffs/*.md` stores themed detail that would otherwise make `HANDOFF.md` too long.
 
 ## Start Of Work
 
@@ -21,8 +22,9 @@ When this skill triggers:
 
 1. Look for `HANDOFF.md` at the workspace root.
 2. If it exists, read it before planning substantial work.
-3. If it does not exist and the task is likely to span multiple turns or sessions, create it from `assets/HANDOFF.template.md`.
-4. Treat `Original Goal`, `Current Focus`, and `Next Steps` as the highest-signal sections.
+3. Read any files listed under `Relevant Context Files` when they are relevant to the current task.
+4. If `HANDOFF.md` does not exist and the task is likely to span multiple turns or sessions, create it from `assets/HANDOFF.template.md`.
+5. Treat `Original Goal`, `Current Focus`, `Relevant Context Files`, and `Next Steps` as the highest-signal sections.
 
 Do not let `HANDOFF.md` override explicit user instructions in the current prompt. If the current prompt conflicts with the handoff, follow the current prompt and record the changed direction when updating the file.
 
@@ -39,16 +41,41 @@ Track only durable session facts:
 
 Avoid recording routine narration, transient thoughts, large logs, full diffs, or every file read.
 
+## Themed Handoffs
+
+Use themed files when details would make `HANDOFF.md` grow into a log.
+
+Recommended layout:
+
+```text
+HANDOFF.md
+handoffs/
+  product.md
+  plugin-install.md
+  validation.md
+  roadmap.md
+```
+
+Rules:
+
+- Keep `HANDOFF.md` as a concise index and current-state summary.
+- Move topic-specific detail into `handoffs/<theme>.md`.
+- Add each important theme file to `HANDOFF.md` under `Relevant Context Files`.
+- Update only the theme files that are relevant to the current work.
+- Prefer stable theme names over date-based files unless the date is part of the domain.
+- Summarize stale theme details instead of appending every session event.
+
 ## End Of Work
 
 Update `HANDOFF.md` after meaningful progress, before ending a long turn, or when the user asks for a handoff.
 
 Keep it short:
 
-- Target 400-900 words.
+- Target 250-600 words for `HANDOFF.md`.
 - Prefer bullets.
 - Remove stale completed details when they no longer help continuation.
 - Preserve important failed attempts until they are no longer relevant.
+- Move detailed validation, install, product, or roadmap notes into the relevant `handoffs/` file.
 
 Use these sections exactly:
 
@@ -60,6 +87,8 @@ Use these sections exactly:
 ## Current Focus
 
 ## Key Decisions
+
+## Relevant Context Files
 
 ## Completed Work
 
@@ -94,6 +123,7 @@ Before ending work, quickly verify:
 
 - `HANDOFF.md` still uses the exact required section names.
 - `Current Focus` and `Next Steps` point to the next concrete action.
+- Theme files listed in `Relevant Context Files` exist and are still relevant.
 - Completed work is current, not a historical changelog.
 - Any validation commands or tests that matter are recorded with outcomes.
 - No secrets, tokens, credentials, or unnecessary private details were added.

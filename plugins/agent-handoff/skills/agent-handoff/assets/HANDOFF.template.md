@@ -13,6 +13,10 @@ State what the next AI coding session should focus on now.
 - Decision:
   Reason:
 
+## Relevant Context Files
+
+- `handoffs/theme.md`: why it matters
+
 ## Completed Work
 
 - Work completed:
