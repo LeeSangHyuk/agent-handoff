@@ -43,6 +43,7 @@ install-immediate value beyond plugin scaffolds and documentation.
 - Added a repo-local Node CLI scaffold with `init`, `validate`, and `compact`.
 - Added reusable templates for `HANDOFF.md`, `AGENTS.md`, `CLAUDE.md`, and `handoffs/`.
 - Validated the CLI with portable Node.js because global Node.js MSI install was cancelled at the admin prompt.
+- Ran clean-clone validation from GitHub; CLI help/validate/compact and init/validate/compact smoke tests passed.
 
 ## Failed Attempts
 
@@ -70,10 +71,10 @@ install-immediate value beyond plugin scaffolds and documentation.
 
 ## Next Steps
 
-1. Commit and push the minimal CLI scaffold.
-2. Run a clean-clone install test.
-3. Try OpenCode in a company/sample repo using the CLI-generated files.
-4. Decide whether `compact` should remain report-only or offer an interactive rewrite mode.
+1. Commit and push the clean-clone validation result.
+2. Try OpenCode in a company/sample repo using the CLI-generated files.
+3. Decide whether `compact` should remain report-only or offer an interactive rewrite mode.
+4. Prepare npm packaging once the OpenCode sample test passes.
 
 ## Open Questions
 

@@ -62,10 +62,10 @@ Agent Handoff는 여기에 다음을 더합니다.
 - Codex 새 세션 smoke test 통과: 짧은 `handoff` 프롬프트로 동작 확인
 - Claude Code marketplace 검증, plugin 검증, marketplace add, local plugin install 통과
 - OpenCode smoke-test 프로젝트에서 `.opencode/plugins` 로컬 플러그인 로드 확인
+- clean clone CLI install/init/validate/compact smoke test 통과
 
 아직 남은 것:
 
-- clean clone install flow
 - 실제 회사/샘플 repo에서 OpenCode agent 행동 검증
 - Claude Code에서 plugin install/details를 넘어 실제 agent 행동 검증
 
@@ -269,9 +269,8 @@ handoffs/
 
 ## 다음 방향
 
-1. clean clone install test
-2. 실제 프로젝트에서 OpenCode 행동 검증
-3. 실제 프로젝트에서 Claude Code 행동 검증
-4. CLI를 npm 배포 가능한 형태로 강화
-5. OpenCode를 npm package로 배포할지 결정
-6. 파일 기반 워크플로가 충분히 유용하다고 확인된 뒤 hooks/MCP 추가 검토
+1. 실제 프로젝트에서 OpenCode 행동 검증
+2. 실제 프로젝트에서 Claude Code 행동 검증
+3. CLI를 npm 배포 가능한 형태로 강화
+4. OpenCode를 npm package로 배포할지 결정
+5. 파일 기반 워크플로가 충분히 유용하다고 확인된 뒤 hooks/MCP 추가 검토

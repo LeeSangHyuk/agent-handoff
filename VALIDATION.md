@@ -64,6 +64,17 @@ CLI validation on 2026-06-10:
 - `node bin/agent-handoff.mjs validate tmp\cli-smoke` passed.
 - `node bin/agent-handoff.mjs compact tmp\cli-smoke` reported that the generated `HANDOFF.md` is compact enough.
 
+Clean-clone validation on 2026-06-10:
+
+- Cloned `https://github.com/LeeSangHyuk/agent-handoff.git` into `tmp\clean-clone-test`.
+- Clone resolved to commit `3c02c19a87979b98f08f9740039ef924f8f869d9`.
+- Portable Node.js ran `bin\agent-handoff.mjs --help` successfully from the clean clone.
+- `node bin\agent-handoff.mjs validate .` passed in the clean clone.
+- `node bin\agent-handoff.mjs compact .` reported expected suggestions because the repository `HANDOFF.md` is slightly over the target length.
+- `node bin\agent-handoff.mjs init tmp\new-project` initially failed in this managed shell because the sandbox denied creating a directory inside the nested clean clone.
+- Re-running the same init/validate/compact sequence with escalated execution succeeded.
+- `package.json`, `.claude-plugin\marketplace.json`, and `plugins\opencode\agent-handoff\package.json` parsed successfully in the clean clone.
+
 Fresh-session plugin smoke test on 2026-06-09:
 
 - User started a separate Codex session and prompted only `handoff`.

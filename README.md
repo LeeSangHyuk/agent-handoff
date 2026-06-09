@@ -65,10 +65,10 @@ Validated so far:
 - Codex fresh-session smoke test passed with a short `handoff` prompt.
 - Claude Code marketplace validation, plugin validation, marketplace add, and local plugin install passed.
 - OpenCode loaded the local plugin scaffold from `.opencode/plugins` in a smoke-test project.
+- Clean-clone CLI install/init/validate/compact smoke test passed.
 
 Still to validate:
 
-- Clean-clone install flow.
 - Real OpenCode agent behavior against a company or sample repo.
 - Real Claude Code agent behavior beyond plugin install/details.
 
@@ -277,9 +277,8 @@ This keeps the next agent from reading a long chronological log before it can ac
 
 ## Planned Direction
 
-1. Run a clean-clone install test.
-2. Test OpenCode behavior in a real project.
-3. Test Claude Code behavior in a real project.
-4. Harden and package the CLI for npm.
-5. Decide whether OpenCode should ship as an npm package.
-6. Add hooks or MCP tools only after the file workflow proves useful.
+1. Test OpenCode behavior in a real project.
+2. Test Claude Code behavior in a real project.
+3. Harden and package the CLI for npm.
+4. Decide whether OpenCode should ship as an npm package.
+5. Add hooks or MCP tools only after the file workflow proves useful.

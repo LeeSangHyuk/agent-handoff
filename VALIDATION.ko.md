@@ -65,6 +65,17 @@ node D:\AgentHandoff\bin\agent-handoff.mjs validate D:\AgentHandoff
 - `node bin/agent-handoff.mjs validate tmp\cli-smoke`가 통과했습니다.
 - `node bin/agent-handoff.mjs compact tmp\cli-smoke`는 생성된 `HANDOFF.md`가 이미 충분히 짧다고 출력했습니다.
 
+2026-06-10 clean clone 검증 결과:
+
+- `https://github.com/LeeSangHyuk/agent-handoff.git`를 `tmp\clean-clone-test`에 새로 clone했습니다.
+- clone된 commit은 `3c02c19a87979b98f08f9740039ef924f8f869d9`입니다.
+- portable Node.js로 clean clone 안에서 `bin\agent-handoff.mjs --help` 실행 성공
+- `node bin\agent-handoff.mjs validate .`가 clean clone에서 통과
+- `node bin\agent-handoff.mjs compact .`는 repo `HANDOFF.md`가 목표 길이를 살짝 넘어서 예상된 제안을 출력
+- `node bin\agent-handoff.mjs init tmp\new-project`는 관리 shell sandbox가 nested clean clone 내부 디렉터리 생성을 막아 처음 실패했습니다.
+- 같은 init/validate/compact 흐름을 권한 상승 실행으로 다시 돌렸고 성공했습니다.
+- clean clone에서 `package.json`, `.claude-plugin\marketplace.json`, `plugins\opencode\agent-handoff\package.json` JSON 파싱이 통과했습니다.
+
 Codex fresh-session smoke test:
 
 - 사용자가 별도 Codex 세션에서 `handoff`만 입력했습니다.
