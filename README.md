@@ -18,6 +18,7 @@ Core idea:
 - An `agent-handoff` skill that tells Codex how to maintain `HANDOFF.md`.
 - A reusable `HANDOFF.template.md` asset.
 - A `VALIDATION.md` checklist for static and manual smoke tests.
+- A repo-local Codex marketplace at `.agents/plugins/marketplace.json`.
 
 ## Current Status
 
@@ -25,20 +26,46 @@ This is an MVP scaffold, not a finished marketplace product. The first test is s
 
 Read `VALIDATION.md` before calling the MVP usable. A successful MVP should pass the static plugin/skill checks and the manual fresh-session smoke test.
 
+## Install In Codex
+
+This repository includes a local marketplace file so Codex can discover the plugin from the repo.
+
+Add this repository root as a local marketplace:
+
+```powershell
+codex plugin marketplace add D:\AgentHandoff
+codex plugin add agent-handoff@agent-handoff-local
+```
+
+Alternatively, install or enable `agent-handoff` from the Codex plugin UI after adding the marketplace.
+
+If you cloned the repo somewhere else, replace `D:\AgentHandoff` with your local clone path.
+
+## Smoke Test
+
+1. Start a fresh Codex session in this repository.
+2. Enable or ask for the `agent-handoff` plugin.
+3. Ask Codex to read `HANDOFF.md` before planning work.
+4. Make a small, meaningful project change.
+5. Confirm Codex updates `HANDOFF.md` before ending the turn.
+6. Start another fresh session and confirm it can continue from the handoff without re-explanation.
+
 ## Repository Layout
 
 ```text
 .
-├── HANDOFF.md
-├── README.md
-├── VALIDATION.md
-└── plugins/
-    └── agent-handoff/
-        ├── .codex-plugin/plugin.json
-        └── skills/agent-handoff/
-            ├── SKILL.md
-            ├── agents/openai.yaml
-            └── assets/HANDOFF.template.md
+|-- .agents/
+|   `-- plugins/marketplace.json
+|-- HANDOFF.md
+|-- README.md
+|-- VALIDATION.md
+`-- plugins/
+    `-- agent-handoff/
+        |-- .codex-plugin/plugin.json
+        `-- skills/agent-handoff/
+            |-- SKILL.md
+            |-- agents/openai.yaml
+            `-- assets/HANDOFF.template.md
 ```
 
 ## Planned Direction

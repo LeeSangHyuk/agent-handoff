@@ -6,7 +6,7 @@ Build a separate Agent Handoff repository instead of mixing the experiment into 
 
 ## Current Focus
 
-Prepare the MVP for a fresh-session trial now that the plugin and skill pass static validation.
+Make the MVP installable in Codex by adding a repo-local marketplace and documenting the install/smoke-test flow.
 
 ## Key Decisions
 
@@ -30,6 +30,10 @@ Prepare the MVP for a fresh-session trial now that the plugin and skill pass sta
 - Ran static validation successfully:
   - `validate_plugin.py D:\AgentHandoff\plugins\agent-handoff`
   - `quick_validate.py D:\AgentHandoff\plugins\agent-handoff\skills\agent-handoff`
+- Created `.agents/plugins/marketplace.json` so the repo can be added as a local Codex marketplace.
+- Added README instructions for adding the marketplace and running a fresh-session smoke test.
+- Confirmed the marketplace name is `agent-handoff-local` with `read_marketplace_name.py`.
+- Re-ran static validation successfully after adding marketplace metadata.
 
 ## Failed Attempts
 
@@ -39,10 +43,14 @@ Prepare the MVP for a fresh-session trial now that the plugin and skill pass sta
 - First validation attempt failed because Python could not import `yaml`.
   Outcome: installed `PyYAML` and reran validation successfully.
   Do not repeat because: the dependency is now installed in the local Python environment.
+- Attempted to run `codex --version` from this managed shell.
+  Outcome: WindowsApps returned access denied, even with escalated command execution.
+  Do not repeat because: marketplace installation likely needs the user's normal terminal or Codex app UI in this environment.
 
 ## Changed Files
 
 - `README.md`: explains the repository purpose and roadmap.
+- `.agents/plugins/marketplace.json`: registers `agent-handoff` as an available local Codex plugin.
 - `VALIDATION.md`: defines how to verify the MVP through static checks and fresh-session smoke tests.
 - `.gitignore`: ignores common local/generated files.
 - `HANDOFF.md`: records the active project state.
@@ -52,13 +60,13 @@ Prepare the MVP for a fresh-session trial now that the plugin and skill pass sta
 
 ## Next Steps
 
-1. Install or otherwise expose the plugin to a fresh Codex session.
-2. Try the manual fresh-session smoke test using this repository.
-3. Decide whether to add installer/marketplace metadata.
-4. Commit the MVP scaffold once the preferred installation path is chosen.
+1. Add the repo-local marketplace with `codex plugin marketplace add D:\AgentHandoff`.
+2. Install the plugin with `codex plugin add agent-handoff@agent-handoff-local`, or enable it from the Codex plugin UI.
+3. Try the manual fresh-session smoke test using this repository.
+4. Record whether plugin discovery and handoff updates work as expected.
 
 ## Open Questions
 
 - Should the public product name be `Agent Handoff`, `Handoff.md`, or something else?
 - Should the next version target Codex only, or add OpenCode hooks quickly?
-- Should this repo include personal marketplace metadata now, or keep installation manual until the workflow is proven?
+- Does Codex install the repo-local marketplace cleanly from this Windows app environment, or does it require using the Codex app UI instead of the CLI?
