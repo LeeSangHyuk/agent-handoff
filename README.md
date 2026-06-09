@@ -22,6 +22,7 @@ Core idea:
 - A themed handoff layout under `handoffs/`.
 - A `PORTABILITY.md` note for OpenCode, Claude Code, and company rollout.
 - `AGENTS.md` and `CLAUDE.md` project rules for non-Codex agents.
+- Initial Claude Code and OpenCode plugin scaffolds under `plugins/claude-code/` and `plugins/opencode/`.
 
 ## Current Status
 
@@ -87,17 +88,24 @@ This keeps the next agent from reading a long chronological log before it can ac
 |   |-- roadmap.md
 |   `-- validation.md
 `-- plugins/
-    `-- agent-handoff/
-        |-- .codex-plugin/plugin.json
-        `-- skills/agent-handoff/
-            |-- SKILL.md
-            |-- agents/openai.yaml
-            `-- assets/HANDOFF.template.md
+    |-- agent-handoff/
+    |   |-- .codex-plugin/plugin.json
+    |   `-- skills/agent-handoff/
+    |       |-- SKILL.md
+    |       |-- agents/openai.yaml
+    |       `-- assets/HANDOFF.template.md
+    |-- claude-code/agent-handoff/
+    |   |-- .claude-plugin/plugin.json
+    |   `-- skills/agent-handoff/SKILL.md
+    `-- opencode/agent-handoff/
+        |-- package.json
+        |-- index.js
+        `-- README.md
 ```
 
 ## Planned Direction
 
 1. Validate the Codex skill workflow locally.
 2. Validate the themed handoff workflow in a fresh Codex session.
-3. Add OpenCode/Claude Code project-rule adapters if the workflow proves useful.
+3. Validate the Claude Code and OpenCode plugin scaffolds.
 4. Add hooks or MCP tools later for stronger automation.

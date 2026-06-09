@@ -1,0 +1,17 @@
+{
+  "name": "@agent-handoff/opencode-plugin",
+  "version": "0.1.0",
+  "description": "OpenCode plugin scaffold for themed AI coding session handoffs.",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "keywords": [
+    "opencode",
+    "plugin",
+    "handoff",
+    "ai-coding"
+  ],
+  "license": "MIT"
+}

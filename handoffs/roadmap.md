@@ -16,8 +16,8 @@ The file-based approach should port well because the core artifact is Markdown, 
 Candidate adapters:
 
 - Codex: plugin skill plus optional `AGENTS.md`.
-- OpenCode: `AGENTS.md` project rules and optional `opencode.json` instruction references.
-- Claude Code: `CLAUDE.md` project memory, optional custom slash command, optional hooks for stronger enforcement.
+- OpenCode: `AGENTS.md` project rules plus a JS/TS plugin under `.opencode/plugins/` or an npm package listed in `opencode.json`.
+- Claude Code: `CLAUDE.md` project memory plus a `.claude-plugin` plugin with skills/hooks for reusable distribution.
 
 ## Company Adoption Path
 
@@ -29,3 +29,11 @@ Start with low-risk repo files:
 4. `CLAUDE.md`
 
 Only add hooks after the team agrees what should be automated, because hooks can create external side effects and should be reviewed like code.
+
+## Plugin Packaging Status
+
+- Codex plugin: working MVP, installed and smoke-tested.
+- Claude Code plugin: scaffolded with `.claude-plugin/plugin.json` and `skills/agent-handoff/SKILL.md`.
+- OpenCode plugin: scaffolded as an npm-style ESM package with an event hook placeholder.
+
+Next validation should happen inside Claude Code and OpenCode rather than only through this managed shell.

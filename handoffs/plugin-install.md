@@ -40,3 +40,10 @@ After pulling this change, reinstall/update the plugin from a normal terminal or
 ```powershell
 codex plugin add agent-handoff@agent-handoff-local
 ```
+
+## Cross-Agent Plugin Scaffolds
+
+- Claude Code: `plugins/claude-code/agent-handoff`
+- OpenCode: `plugins/opencode/agent-handoff`
+
+These are initial scaffolds and still need runtime validation in their native tools.

@@ -35,20 +35,22 @@ Optional hardening:
 
 ## OpenCode
 
-OpenCode supports project rules through `AGENTS.md`. This repository includes a committed `AGENTS.md` that tells OpenCode to read `HANDOFF.md` first and update relevant files under `handoffs/`.
+OpenCode supports project rules through `AGENTS.md` and plugins through local `.opencode/plugins/` files or npm packages listed in `opencode.json`. This repository includes both a committed `AGENTS.md` and an initial plugin scaffold under `plugins/opencode/agent-handoff`.
 
-Optional OpenCode shape:
+OpenCode shape:
 
 ```text
 AGENTS.md
 opencode.json
+.opencode/plugins/
+plugins/opencode/agent-handoff/
 ```
 
-`opencode.json` can reference additional instruction files if the team wants to split rules across documents.
+`opencode.json` can reference npm plugins and additional instruction files if the team wants to split rules across documents.
 
 ## Claude Code
 
-Claude Code supports project memory through `CLAUDE.md` or `.claude/CLAUDE.md`. This repository includes a committed `CLAUDE.md` for the same handoff behavior. Claude Code also supports hooks and plugins for stronger automation.
+Claude Code supports project memory through `CLAUDE.md` or `.claude/CLAUDE.md`. This repository includes a committed `CLAUDE.md` for the same handoff behavior. Claude Code also supports shareable plugins and marketplaces; this repository includes an initial Claude Code plugin scaffold under `plugins/claude-code/agent-handoff`.
 
 Recommended company-safe starting point:
 
@@ -85,6 +87,7 @@ Security guidance:
 ## References
 
 - OpenCode rules: `AGENTS.md` project instructions and `opencode.json` instruction references.
+- OpenCode plugins: local `.opencode/plugins/` files or npm packages listed in `opencode.json`.
 - Claude Code memory: `CLAUDE.md` and `.claude/CLAUDE.md` project memory.
 - Claude Code hooks: project/plugin hooks for stronger lifecycle automation.
 - Claude Code plugins: local plugin packages can include skills, agents, hooks, and MCP servers.
