@@ -20,11 +20,21 @@ const REQUIRED_SECTIONS = [
   "Open Questions",
 ];
 
-const THEME_FILES = [
+const ROOT_THEME_FILES = [
   "handoffs/product.md",
   "handoffs/plugin-install.md",
   "handoffs/validation.md",
   "handoffs/roadmap.md",
+];
+
+const HIDDEN_ROOT = ".agent-handoff";
+
+const HIDDEN_THEME_FILES = ROOT_THEME_FILES.map((file) => `${HIDDEN_ROOT}/${file}`);
+
+const HIDDEN_AGENT_FILES = [
+  `${HIDDEN_ROOT}/agents/codex.md`,
+  `${HIDDEN_ROOT}/agents/claude.md`,
+  `${HIDDEN_ROOT}/agents/opencode.md`,
 ];
 
 const SECRET_PATTERNS = [
@@ -40,12 +50,13 @@ function usage(exitCode = 0) {
 agent-handoff <command> [target]
 
 Commands:
-  init [target]       Create HANDOFF.md, handoffs/, AGENTS.md, and CLAUDE.md.
+  init [target]       Create handoff files. Use --layout hidden for .agent-handoff/.
   validate [target]   Check handoff structure, links, length, and secret smells.
   compact [target]    Report content that should move from HANDOFF.md to themes.
 
 Examples:
   agent-handoff init .
+  agent-handoff init . --layout hidden
   agent-handoff validate .
   agent-handoff compact .
 `;
@@ -76,18 +87,61 @@ function copyTemplateIfMissing(target, relativePath, templateRelativePath = rela
   return writeFileIfMissing(target, relativePath, readUtf8(template));
 }
 
-function init(target) {
-  const results = [
-    copyTemplateIfMissing(target, "HANDOFF.md"),
-    copyTemplateIfMissing(target, "AGENTS.md"),
-    copyTemplateIfMissing(target, "CLAUDE.md"),
-    ...THEME_FILES.map((file) => copyTemplateIfMissing(target, file)),
-  ];
+function init(target, options) {
+  const layout = options.layout || "root";
+  const results = layout === "hidden" ? initHidden(target) : initRoot(target);
 
-  console.log("Agent Handoff initialized:");
+  console.log(`Agent Handoff initialized (${layout} layout):`);
   for (const result of results) {
     console.log(`- ${result.status.padEnd(7)} ${result.path}`);
   }
+}
+
+function initRoot(target) {
+  return [
+    copyTemplateIfMissing(target, "HANDOFF.md"),
+    copyTemplateIfMissing(target, "AGENTS.md"),
+    copyTemplateIfMissing(target, "CLAUDE.md"),
+    ...ROOT_THEME_FILES.map((file) => copyTemplateIfMissing(target, file)),
+  ];
+}
+
+function initHidden(target) {
+  const handoff = readUtf8(path.join(templateRoot, "HANDOFF.md"))
+    .replaceAll("`handoffs/", "`.agent-handoff/handoffs/");
+  const codex = hiddenAgentInstructions("Codex");
+  const claude = hiddenAgentInstructions("Claude Code");
+  const opencode = hiddenAgentInstructions("OpenCode");
+
+  return [
+    writeFileIfMissing(target, `${HIDDEN_ROOT}/HANDOFF.md`, handoff),
+    writeFileIfMissing(target, `${HIDDEN_ROOT}/agents/codex.md`, codex),
+    writeFileIfMissing(target, `${HIDDEN_ROOT}/agents/claude.md`, claude),
+    writeFileIfMissing(target, `${HIDDEN_ROOT}/agents/opencode.md`, opencode),
+    ...ROOT_THEME_FILES.map((file) => copyTemplateIfMissing(target, `${HIDDEN_ROOT}/${file}`, file)),
+  ];
+}
+
+function hiddenAgentInstructions(agentName) {
+  return `# Agent Handoff Instructions for ${agentName}
+
+This repository keeps AI coding session state under \`.agent-handoff/\` so the
+project root stays clean.
+
+Before substantial work:
+
+1. Read \`.agent-handoff/HANDOFF.md\`.
+2. Use it as the concise current-state index.
+3. Read relevant files under \`.agent-handoff/handoffs/\` when the handoff points to them.
+
+After meaningful work:
+
+1. Update \`.agent-handoff/HANDOFF.md\` with the current focus and next steps.
+2. Update the relevant themed file under \`.agent-handoff/handoffs/\`.
+3. Keep the handoff concise; do not turn it into a chronological session log.
+
+Never store secrets, credentials, or unnecessary private details in handoff files.
+`;
 }
 
 function parseSections(markdown) {
@@ -104,25 +158,63 @@ function referencedContextFiles(markdown) {
   return [...block.matchAll(/`([^`]+)`/g)].map((match) => match[1]);
 }
 
+function detectLayout(target) {
+  const rootHandoff = path.join(target, "HANDOFF.md");
+  const hiddenHandoff = path.join(target, HIDDEN_ROOT, "HANDOFF.md");
+
+  if (fs.existsSync(hiddenHandoff)) {
+    return {
+      name: "hidden",
+      handoffFile: `${HIDDEN_ROOT}/HANDOFF.md`,
+      themeFiles: HIDDEN_THEME_FILES,
+      agentFiles: HIDDEN_AGENT_FILES,
+      legacyRootExists: fs.existsSync(rootHandoff),
+    };
+  }
+
+  if (fs.existsSync(rootHandoff)) {
+    return {
+      name: "root",
+      handoffFile: "HANDOFF.md",
+      themeFiles: ROOT_THEME_FILES,
+      agentFiles: ["AGENTS.md", "CLAUDE.md"],
+      legacyRootExists: false,
+    };
+  }
+
+  return {
+    name: "missing",
+    handoffFile: "HANDOFF.md",
+    themeFiles: ROOT_THEME_FILES,
+    agentFiles: ["AGENTS.md", "CLAUDE.md"],
+    legacyRootExists: false,
+  };
+}
+
 function validate(target) {
   const errors = [];
   const warnings = [];
-  const handoffPath = path.join(target, "HANDOFF.md");
+  const layout = detectLayout(target);
+  const handoffPath = path.join(target, layout.handoffFile);
+
+  if (layout.legacyRootExists) {
+    warnings.push(`Both ${HIDDEN_ROOT}/HANDOFF.md and HANDOFF.md exist; using ${HIDDEN_ROOT}/HANDOFF.md.`);
+  }
 
   if (!fs.existsSync(handoffPath)) {
-    errors.push("Missing HANDOFF.md.");
+    errors.push(`Missing handoff file. Expected HANDOFF.md or ${HIDDEN_ROOT}/HANDOFF.md.`);
   } else {
     const handoff = readUtf8(handoffPath);
     const sections = parseSections(handoff);
     for (const section of REQUIRED_SECTIONS) {
       if (!sections.includes(section)) {
-        errors.push(`HANDOFF.md is missing section: ${section}`);
+        errors.push(`${layout.handoffFile} is missing section: ${section}`);
       }
     }
 
     const wordCount = handoff.trim().split(/\s+/).filter(Boolean).length;
     if (wordCount > 900) {
-      warnings.push(`HANDOFF.md is long (${wordCount} words). Consider compact.`);
+      warnings.push(`${layout.handoffFile} is long (${wordCount} words). Consider compact.`);
     }
 
     for (const relativePath of referencedContextFiles(handoff)) {
@@ -133,19 +225,19 @@ function validate(target) {
 
     for (const pattern of SECRET_PATTERNS) {
       if (pattern.test(handoff)) {
-        errors.push("HANDOFF.md may contain a secret-like value.");
+        errors.push(`${layout.handoffFile} may contain a secret-like value.`);
         break;
       }
     }
   }
 
-  for (const file of THEME_FILES) {
+  for (const file of layout.themeFiles) {
     if (!fs.existsSync(path.join(target, file))) {
       warnings.push(`Recommended theme file is missing: ${file}`);
     }
   }
 
-  for (const file of ["AGENTS.md", "CLAUDE.md"]) {
+  for (const file of layout.agentFiles) {
     if (!fs.existsSync(path.join(target, file))) {
       warnings.push(`Recommended agent rule file is missing: ${file}`);
     }
@@ -173,9 +265,10 @@ function printValidation(errors, warnings) {
 }
 
 function compact(target) {
-  const handoffPath = path.join(target, "HANDOFF.md");
+  const layout = detectLayout(target);
+  const handoffPath = path.join(target, layout.handoffFile);
   if (!fs.existsSync(handoffPath)) {
-    console.error("Missing HANDOFF.md.");
+    console.error(`Missing handoff file. Expected HANDOFF.md or ${HIDDEN_ROOT}/HANDOFF.md.`);
     process.exit(1);
   }
 
@@ -186,23 +279,23 @@ function compact(target) {
   const wordCount = handoff.trim().split(/\s+/).filter(Boolean).length;
 
   if (wordCount > 600) {
-    suggestions.push(`HANDOFF.md has ${wordCount} words; target 250-600.`);
+    suggestions.push(`${layout.handoffFile} has ${wordCount} words; target 250-600.`);
   }
   if (completedLines > 8) {
-    suggestions.push("Move older completed work into handoffs/validation.md or roadmap.md.");
+    suggestions.push(`Move older completed work into ${layout.themeFiles[2]} or ${layout.themeFiles[3]}.`);
   }
   if (failedLines > 5) {
     suggestions.push("Move detailed failed attempts into the relevant themed handoff file.");
   }
 
-  for (const file of THEME_FILES) {
+  for (const file of layout.themeFiles) {
     if (!handoff.includes(`\`${file}\``)) {
       suggestions.push(`Consider listing \`${file}\` under Relevant Context Files.`);
     }
   }
 
   if (!suggestions.length) {
-    console.log("HANDOFF.md is already compact enough.");
+    console.log(`${layout.handoffFile} is already compact enough.`);
     return;
   }
 
@@ -219,8 +312,40 @@ function countListItemsAfter(markdown, sectionName) {
   return block.split("\n").filter((line) => line.trim().startsWith("- ")).length;
 }
 
-const [command, targetArg] = process.argv.slice(2);
-const target = resolveTarget(targetArg);
+const [command, ...commandArgs] = process.argv.slice(2);
+const options = parseOptions(commandArgs);
+const target = resolveTarget(options.target);
+
+function parseOptions(args) {
+  const options = {};
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+    if (arg === "--layout") {
+      if (!args[index + 1] || args[index + 1].startsWith("-")) {
+        console.error("Missing value for --layout. Use root or hidden.");
+        usage(1);
+      }
+      options.layout = args[index + 1];
+      index += 1;
+    } else if (arg === "--layout=hidden" || arg === "--hidden") {
+      options.layout = "hidden";
+    } else if (arg === "--layout=root") {
+      options.layout = "root";
+    } else if (!arg.startsWith("-")) {
+      options.target = arg;
+    } else {
+      console.error(`Unknown option: ${arg}`);
+      usage(1);
+    }
+  }
+
+  if (options.layout && !["root", "hidden"].includes(options.layout)) {
+    console.error(`Unknown layout: ${options.layout}`);
+    usage(1);
+  }
+
+  return options;
+}
 
 if (!command || command === "--help" || command === "-h") {
   usage(0);
@@ -237,7 +362,7 @@ if (!fs.existsSync(target)) {
 
 switch (command) {
   case "init":
-    init(target);
+    init(target, options);
     break;
   case "validate":
     validate(target);

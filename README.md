@@ -14,11 +14,15 @@ without starting from zero.
 Long AI coding sessions lose shape. Context gets compacted, fresh sessions
 forget why decisions were made, and different agents repeat failed attempts.
 
-Agent Handoff keeps the durable working state in files that live with the code:
+Agent Handoff keeps the durable working state in files that live with the code.
+For company projects, the recommended layout keeps the project root clean:
 
-- `HANDOFF.md`: the short first-read index and current-state summary.
-- `handoffs/*.md`: themed detail files for product, install, validation, roadmap, or team-specific topics.
-- `AGENTS.md` / `CLAUDE.md`: project rules for agents that read repo instructions.
+- `.agent-handoff/HANDOFF.md`: the short first-read index and current-state summary.
+- `.agent-handoff/handoffs/*.md`: themed detail files for product, install, validation, roadmap, or team-specific topics.
+- `.agent-handoff/agents/*.md`: agent-specific instructions for Codex, Claude Code, and OpenCode.
+
+The older root layout (`HANDOFF.md`, `handoffs/`, `AGENTS.md`, `CLAUDE.md`) is
+still supported for compatibility.
 
 The goal is not generic memory. The goal is **auditable AI coding session handoff**.
 
@@ -76,20 +80,31 @@ See `VALIDATION.md` for exact commands and results.
 
 ## Quick Start
 
-For a repo that only needs the file convention, run:
+For a company repo, use the hidden layout so Agent Handoff does not add files to
+the project root:
 
 ```powershell
-node bin/agent-handoff.mjs init path\to\your-project
+node bin/agent-handoff.mjs init path\to\your-project --layout hidden
 node bin/agent-handoff.mjs validate path\to\your-project
 ```
 
 Then start a fresh AI coding session and say:
 
 ```text
-handoff
+.agent-handoff/HANDOFF.md를 먼저 읽고 이어서 작업해줘.
 ```
 
 For tool-specific plugin setup, use the Codex, Claude Code, or OpenCode sections below.
+
+If you already initialized the older root layout in a project, remove the old
+generated files before re-initializing:
+
+```text
+HANDOFF.md
+AGENTS.md
+CLAUDE.md
+handoffs/
+```
 
 The future npm shape is:
 
@@ -168,12 +183,10 @@ Source file:
 plugins/opencode/agent-handoff/index.js
 ```
 
-Also copy or adapt:
+Also initialize the hidden handoff layout:
 
-```text
-AGENTS.md
-HANDOFF.md
-handoffs/
+```powershell
+node bin\agent-handoff.mjs init path\to\your-project --layout hidden
 ```
 
 The OpenCode scaffold can later become an npm package listed in `opencode.json`.
@@ -183,15 +196,15 @@ The OpenCode scaffold can later become an npm package listed in `opencode.json`.
 In a fresh agent session, try:
 
 ```text
-handoff
+.agent-handoff/HANDOFF.md를 먼저 읽고 이어서 작업해줘.
 ```
 
 Expected result:
 
-1. The agent reads `HANDOFF.md`.
+1. The agent reads `.agent-handoff/HANDOFF.md`.
 2. It follows the current focus and next steps.
-3. It reads relevant files from `handoffs/`.
-4. After meaningful work, it updates `HANDOFF.md` briefly.
+3. It reads relevant files from `.agent-handoff/handoffs/`.
+4. After meaningful work, it updates `.agent-handoff/HANDOFF.md` briefly.
 5. Detailed notes go into the relevant themed file.
 
 See `examples/before-after.md` for a concrete before/after handoff example.
@@ -201,27 +214,35 @@ See `examples/before-after.md` for a concrete before/after handoff example.
 The repo-local CLI is intentionally small:
 
 ```powershell
-node bin/agent-handoff.mjs init .
+node bin/agent-handoff.mjs init . --layout hidden
 node bin/agent-handoff.mjs validate .
 node bin/agent-handoff.mjs compact .
 ```
 
 Commands:
 
-- `init`: creates `HANDOFF.md`, `handoffs/`, `AGENTS.md`, and `CLAUDE.md` if missing.
+- `init`: creates handoff files without overwriting existing files.
+- `init --layout hidden`: creates `.agent-handoff/HANDOFF.md`, `.agent-handoff/handoffs/`, and `.agent-handoff/agents/`.
+- `init --layout root`: creates the older root-level `HANDOFF.md`, `handoffs/`, `AGENTS.md`, and `CLAUDE.md`.
 - `validate`: checks required sections, referenced context files, length, and secret-like values.
 - `compact`: reports when `HANDOFF.md` should be shortened or split into theme files.
 
 ## Themed Handoffs
 
-`HANDOFF.md` is the first-read index and current-state summary. Longer-lived detail belongs in theme files:
+`.agent-handoff/HANDOFF.md` is the first-read index and current-state summary. Longer-lived detail belongs in theme files:
 
 ```text
-handoffs/
-|-- product.md
-|-- plugin-install.md
-|-- validation.md
-`-- roadmap.md
+.agent-handoff/
+|-- HANDOFF.md
+|-- agents/
+|   |-- codex.md
+|   |-- claude.md
+|   `-- opencode.md
+`-- handoffs/
+    |-- product.md
+    |-- plugin-install.md
+    |-- validation.md
+    `-- roadmap.md
 ```
 
 This keeps the next agent from reading a long chronological log before it can act.

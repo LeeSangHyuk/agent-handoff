@@ -64,6 +64,17 @@ CLI validation on 2026-06-10:
 - `node bin/agent-handoff.mjs validate tmp\cli-smoke` passed.
 - `node bin/agent-handoff.mjs compact tmp\cli-smoke` reported that the generated `HANDOFF.md` is compact enough.
 
+Hidden-layout validation on 2026-06-10:
+
+- `node bin\agent-handoff.mjs init tmp\hidden-layout-smoke --layout hidden` created `.agent-handoff/HANDOFF.md`, `.agent-handoff/agents/*.md`, and `.agent-handoff/handoffs/*.md`.
+- `node bin\agent-handoff.mjs init --layout hidden tmp\hidden-layout-smoke-alt` also worked, confirming option order is flexible.
+- `node bin\agent-handoff.mjs validate tmp\hidden-layout-smoke` passed.
+- `node bin\agent-handoff.mjs compact tmp\hidden-layout-smoke` reported `.agent-handoff/HANDOFF.md` is already compact enough.
+- `node bin\agent-handoff.mjs init tmp\root-layout-smoke --layout root` created the older root layout for compatibility.
+- `node bin\agent-handoff.mjs validate tmp\root-layout-smoke` passed.
+- `node bin\agent-handoff.mjs compact tmp\root-layout-smoke` reported `HANDOFF.md` is already compact enough.
+- When both root and hidden handoffs exist, `validate` prefers `.agent-handoff/HANDOFF.md` and prints a warning so migration is explicit.
+
 Clean-clone validation on 2026-06-10:
 
 - Cloned `https://github.com/LeeSangHyuk/agent-handoff.git` into `tmp\clean-clone-test`.
@@ -110,16 +121,16 @@ Use a temporary directory:
 
 ```powershell
 mkdir tmp\cli-smoke
-node bin\agent-handoff.mjs init tmp\cli-smoke
+node bin\agent-handoff.mjs init tmp\cli-smoke --layout hidden
 node bin\agent-handoff.mjs validate tmp\cli-smoke
 node bin\agent-handoff.mjs compact tmp\cli-smoke
 ```
 
 Expected result:
 
-- `init` creates the handoff files without overwriting existing files.
+- `init --layout hidden` creates `.agent-handoff/HANDOFF.md`, `.agent-handoff/agents/`, and `.agent-handoff/handoffs/` without overwriting existing files.
 - `validate` passes on the generated structure.
-- `compact` prints that `HANDOFF.md` is already compact enough, or only low-risk suggestions.
+- `compact` prints that `.agent-handoff/HANDOFF.md` is already compact enough, or only low-risk suggestions.
 
 ## Behavioral Checks
 
@@ -128,5 +139,5 @@ Expected result:
 - The handoff records failed attempts that should not be repeated.
 - The handoff records commands/tests and their outcomes when they matter for continuation.
 - The handoff never stores secrets, credentials, or unnecessary private details.
-- `HANDOFF.md` is an index/current-state file, not a chronological log.
-- Detailed install, validation, product, and roadmap notes go into themed files under `handoffs/`.
+- The handoff file is an index/current-state file, not a chronological log.
+- Detailed install, validation, product, and roadmap notes go into themed files under `.agent-handoff/handoffs/` or `handoffs/`, matching the active layout.

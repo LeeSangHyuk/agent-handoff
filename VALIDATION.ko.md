@@ -65,6 +65,17 @@ node D:\AgentHandoff\bin\agent-handoff.mjs validate D:\AgentHandoff
 - `node bin/agent-handoff.mjs validate tmp\cli-smoke`가 통과했습니다.
 - `node bin/agent-handoff.mjs compact tmp\cli-smoke`는 생성된 `HANDOFF.md`가 이미 충분히 짧다고 출력했습니다.
 
+2026-06-10 hidden layout 검증 결과:
+
+- `node bin\agent-handoff.mjs init tmp\hidden-layout-smoke --layout hidden`가 `.agent-handoff/HANDOFF.md`, `.agent-handoff/agents/*.md`, `.agent-handoff/handoffs/*.md`를 생성했습니다.
+- `node bin\agent-handoff.mjs init --layout hidden tmp\hidden-layout-smoke-alt`도 성공해 option 순서가 유연함을 확인했습니다.
+- `node bin\agent-handoff.mjs validate tmp\hidden-layout-smoke`가 통과했습니다.
+- `node bin\agent-handoff.mjs compact tmp\hidden-layout-smoke`는 `.agent-handoff/HANDOFF.md`가 이미 충분히 짧다고 출력했습니다.
+- `node bin\agent-handoff.mjs init tmp\root-layout-smoke --layout root`는 기존 root layout을 호환 목적으로 생성했습니다.
+- `node bin\agent-handoff.mjs validate tmp\root-layout-smoke`가 통과했습니다.
+- `node bin\agent-handoff.mjs compact tmp\root-layout-smoke`는 `HANDOFF.md`가 이미 충분히 짧다고 출력했습니다.
+- root handoff와 hidden handoff가 함께 있으면 `validate`는 `.agent-handoff/HANDOFF.md`를 우선 사용하고 migration 경고를 출력합니다.
+
 2026-06-10 clean clone 검증 결과:
 
 - `https://github.com/LeeSangHyuk/agent-handoff.git`를 `tmp\clean-clone-test`에 새로 clone했습니다.
@@ -111,16 +122,16 @@ Cross-agent scaffold 결과:
 
 ```powershell
 mkdir tmp\cli-smoke
-node bin\agent-handoff.mjs init tmp\cli-smoke
+node bin\agent-handoff.mjs init tmp\cli-smoke --layout hidden
 node bin\agent-handoff.mjs validate tmp\cli-smoke
 node bin\agent-handoff.mjs compact tmp\cli-smoke
 ```
 
 기대 결과:
 
-- `init`은 기존 파일을 덮어쓰지 않고 handoff 파일을 생성합니다.
+- `init --layout hidden`은 기존 파일을 덮어쓰지 않고 `.agent-handoff/HANDOFF.md`, `.agent-handoff/agents/`, `.agent-handoff/handoffs/`를 생성합니다.
 - `validate`는 생성된 구조에서 통과합니다.
-- `compact`는 `HANDOFF.md`가 이미 충분히 짧다고 출력하거나 낮은 위험의 제안만 출력합니다.
+- `compact`는 `.agent-handoff/HANDOFF.md`가 이미 충분히 짧다고 출력하거나 낮은 위험의 제안만 출력합니다.
 
 ## 행동 검증
 
@@ -129,5 +140,5 @@ node bin\agent-handoff.mjs compact tmp\cli-smoke
 - 반복하면 안 되는 실패한 시도를 기록합니다.
 - 이어받기에 중요한 command/test와 결과를 기록합니다.
 - secret, credential, 불필요한 private detail을 저장하지 않습니다.
-- `HANDOFF.md`는 시간순 로그가 아니라 현재 상태 인덱스입니다.
-- 설치, 검증, 제품, 로드맵 상세는 `handoffs/`의 테마 파일에 기록합니다.
+- handoff 파일은 시간순 로그가 아니라 현재 상태 인덱스입니다.
+- 설치, 검증, 제품, 로드맵 상세는 활성 layout에 맞춰 `.agent-handoff/handoffs/` 또는 `handoffs/`의 테마 파일에 기록합니다.

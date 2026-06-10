@@ -9,25 +9,32 @@ description: >-
 # Agent Handoff
 
 Use repository Markdown files as the durable handoff state for AI coding sessions.
+Prefer the hidden layout `.agent-handoff/HANDOFF.md` when it exists; fall back
+to root `HANDOFF.md` for older projects.
 
 ## Start
 
-1. Read `HANDOFF.md` at the workspace root before planning substantial work.
-2. Treat `HANDOFF.md` as the concise index and current-state summary.
-3. Read relevant files listed under `Relevant Context Files`.
-4. If `HANDOFF.md` is missing and the work will span sessions, create it with the required sections.
+1. Look for `.agent-handoff/HANDOFF.md` first, then `HANDOFF.md` at the workspace root.
+2. Read the first existing handoff file before planning substantial work.
+3. Treat the handoff file as the concise index and current-state summary.
+4. Read relevant files listed under `Relevant Context Files`.
+5. If neither handoff file exists and the work will span sessions, create `.agent-handoff/HANDOFF.md` with the required sections.
 
 ## Themed Files
 
-Keep durable detail under `handoffs/`:
+Keep durable detail under `.agent-handoff/handoffs/` for hidden-layout projects:
 
 ```text
-handoffs/
-  product.md
-  plugin-install.md
-  validation.md
-  roadmap.md
+.agent-handoff/
+  HANDOFF.md
+  handoffs/
+    product.md
+    plugin-install.md
+    validation.md
+    roadmap.md
 ```
+
+For older root-layout projects, continue using `handoffs/`.
 
 Use stable theme names. Do not create date-based logs unless the date is part of the domain.
 
@@ -35,9 +42,9 @@ Use stable theme names. Do not create date-based logs unless the date is part of
 
 Before ending meaningful work:
 
-1. Update `HANDOFF.md` with the latest current focus and next steps.
-2. Update only the relevant `handoffs/*.md` detail files.
-3. Keep `HANDOFF.md` concise; move details to theme files.
+1. Update `.agent-handoff/HANDOFF.md` or `HANDOFF.md` with the latest current focus and next steps.
+2. Update only the relevant themed detail files.
+3. Keep the handoff file concise; move details to theme files.
 4. Record failed attempts that future agents should not repeat.
 5. Do not store secrets, credentials, or unnecessary private details.
 

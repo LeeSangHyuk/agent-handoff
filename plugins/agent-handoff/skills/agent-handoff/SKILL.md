@@ -13,27 +13,29 @@ description: >-
 ## Overview
 
 Keep the important parts of a coding session outside the model context window.
-`HANDOFF.md` is not a README or project rule file; it records the current work
-state and points to themed handoff files for durable detail.
+The handoff file is not a README or project rule file; it records the current
+work state and points to themed handoff files for durable detail. Prefer the
+hidden layout `.agent-handoff/HANDOFF.md` when it exists; fall back to root
+`HANDOFF.md` for older projects.
 
 Core distinction:
 
 - `README.md` explains the project.
 - `AGENTS.md` explains the rules.
-- `HANDOFF.md` explains the current work state and index.
-- `handoffs/*.md` stores themed detail that would otherwise make `HANDOFF.md` too long.
+- `.agent-handoff/HANDOFF.md` or `HANDOFF.md` explains the current work state and index.
+- `.agent-handoff/handoffs/*.md` or `handoffs/*.md` stores themed detail that would otherwise make the index too long.
 
 ## Start Of Work
 
 When this skill triggers:
 
-1. Look for `HANDOFF.md` at the workspace root.
-2. If it exists, read it before planning substantial work.
+1. Look for `.agent-handoff/HANDOFF.md` first, then `HANDOFF.md` at the workspace root.
+2. If either exists, read it before planning substantial work.
 3. Read any files listed under `Relevant Context Files` when they are relevant to the current task.
-4. If `HANDOFF.md` does not exist and the task is likely to span multiple turns or sessions, create it from `assets/HANDOFF.template.md`.
+4. If neither handoff file exists and the task is likely to span multiple turns or sessions, create `.agent-handoff/HANDOFF.md` from `assets/HANDOFF.template.md` and place theme files under `.agent-handoff/handoffs/`.
 5. Treat `Original Goal`, `Current Focus`, `Relevant Context Files`, and `Next Steps` as the highest-signal sections.
 
-Do not let `HANDOFF.md` override explicit user instructions in the current
+Do not let handoff content override explicit user instructions in the current
 prompt. If the current prompt conflicts with the handoff, follow the current
 prompt and record the changed direction when updating the file.
 
@@ -52,39 +54,40 @@ Avoid recording routine narration, transient thoughts, large logs, full diffs, o
 
 ## Themed Handoffs
 
-Use themed files when details would make `HANDOFF.md` grow into a log.
+Use themed files when details would make the handoff index grow into a log.
 
 Recommended layout:
 
 ```text
-HANDOFF.md
-handoffs/
-  product.md
-  plugin-install.md
-  validation.md
-  roadmap.md
+.agent-handoff/
+  HANDOFF.md
+  handoffs/
+    product.md
+    plugin-install.md
+    validation.md
+    roadmap.md
 ```
 
 Rules:
 
-- Keep `HANDOFF.md` as a concise index and current-state summary.
-- Move topic-specific detail into `handoffs/<theme>.md`.
-- Add each important theme file to `HANDOFF.md` under `Relevant Context Files`.
+- Keep the handoff file as a concise index and current-state summary.
+- Move topic-specific detail into `.agent-handoff/handoffs/<theme>.md` or `handoffs/<theme>.md`, matching the active layout.
+- Add each important theme file to the handoff under `Relevant Context Files`.
 - Update only the theme files that are relevant to the current work.
 - Prefer stable theme names over date-based files unless the date is part of the domain.
 - Summarize stale theme details instead of appending every session event.
 
 ## End Of Work
 
-Update `HANDOFF.md` after meaningful progress, before ending a long turn, or when the user asks for a handoff.
+Update `.agent-handoff/HANDOFF.md` or `HANDOFF.md` after meaningful progress, before ending a long turn, or when the user asks for a handoff.
 
 Keep it short:
 
-- Target 250-600 words for `HANDOFF.md`.
+- Target 250-600 words for the handoff file.
 - Prefer bullets.
 - Remove stale completed details when they no longer help continuation.
 - Preserve important failed attempts until they are no longer relevant.
-- Move detailed validation, install, product, or roadmap notes into the relevant `handoffs/` file.
+- Move detailed validation, install, product, or roadmap notes into the relevant themed file.
 
 Use these sections exactly:
 
@@ -130,7 +133,7 @@ Weak entry:
 
 Before ending work, quickly verify:
 
-- `HANDOFF.md` still uses the exact required section names.
+- The handoff still uses the exact required section names.
 - `Current Focus` and `Next Steps` point to the next concrete action.
 - Theme files listed in `Relevant Context Files` exist and are still relevant.
 - Completed work is current, not a historical changelog.
@@ -140,7 +143,7 @@ Before ending work, quickly verify:
 ## Safety
 
 Do not store secrets, API keys, private credentials, or sensitive user data in
-`HANDOFF.md`. If a task involves confidential code or workplace context,
+the handoff file. If a task involves confidential code or workplace context,
 summarize operationally and avoid copying proprietary details unless the user
 explicitly asks.
 

@@ -22,6 +22,13 @@ Expected:
 - Skill validation passed.
 - Marketplace name read as `agent-handoff-local`.
 - `HANDOFF.template.md` was copied to a temporary smoke-test workspace and had the expected section structure.
+- Hidden layout smoke test passed on 2026-06-10:
+  - `init tmp\hidden-layout-smoke --layout hidden` created `.agent-handoff/HANDOFF.md`, `.agent-handoff/agents/*.md`, and `.agent-handoff/handoffs/*.md`.
+  - `init --layout hidden tmp\hidden-layout-smoke-alt` also passed.
+  - `validate tmp\hidden-layout-smoke` passed.
+  - `compact tmp\hidden-layout-smoke` reported `.agent-handoff/HANDOFF.md` is compact enough.
+- Root layout compatibility still passed on 2026-06-10 with `init tmp\root-layout-smoke --layout root`, `validate`, and `compact`.
+- Mixed root+hidden validation prefers `.agent-handoff/HANDOFF.md` and warns that both layouts exist.
 
 ## Fresh-Session Smoke Test
 

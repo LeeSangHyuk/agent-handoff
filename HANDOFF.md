@@ -7,7 +7,9 @@ Build a separate Agent Handoff repository instead of mixing the experiment into 
 ## Current Focus
 
 Pivot the project toward a minimal CLI plus handoff protocol so it provides
-install-immediate value beyond plugin scaffolds and documentation.
+install-immediate value beyond plugin scaffolds and documentation. The current
+company-rollout shape favors a hidden `.agent-handoff/` layout so project roots
+stay clean.
 
 ## Key Decisions
 
@@ -17,6 +19,8 @@ install-immediate value beyond plugin scaffolds and documentation.
   Reason: install, validation, product, and roadmap context grow at different rates.
 - Keep the first implementation local and file-based.
   Reason: this can work across Codex, OpenCode, Claude Code, and company repos without a hosted service.
+- Prefer `.agent-handoff/HANDOFF.md` for company projects while keeping root `HANDOFF.md` compatibility.
+  Reason: users want the repo root to stay clean, but older installs and simple prompts should keep working.
 
 ## Relevant Context Files
 
@@ -44,6 +48,9 @@ install-immediate value beyond plugin scaffolds and documentation.
 - Added reusable templates for `HANDOFF.md`, `AGENTS.md`, `CLAUDE.md`, and `handoffs/`.
 - Validated the CLI with portable Node.js because global Node.js MSI install was cancelled at the admin prompt.
 - Ran clean-clone validation from GitHub; CLI help/validate/compact and init/validate/compact smoke tests passed.
+- Added `init --layout hidden`, which creates `.agent-handoff/HANDOFF.md`, `.agent-handoff/agents/*.md`, and `.agent-handoff/handoffs/*.md` without root-level handoff files.
+- Updated `validate` and `compact` to auto-detect hidden and root layouts.
+- Updated Codex/Claude skill instructions and docs to prefer the hidden layout while retaining root-layout fallback.
 
 ## Failed Attempts
 
@@ -64,6 +71,8 @@ install-immediate value beyond plugin scaffolds and documentation.
 - `LICENSE`: project license.
 - `package.json`, `bin/agent-handoff.mjs`, `templates/`: minimal CLI scaffold.
 - `AGENTS.md`, `CLAUDE.md`, `PORTABILITY.md`: cross-agent and company rollout support.
+- `README.md`, `README.ko.md`: hidden-layout quick start and old-root cleanup guidance.
+- `VALIDATION.md`, `VALIDATION.ko.md`, `handoffs/validation.md`: hidden-layout smoke results.
 - `plugins/claude-code/agent-handoff`: Claude Code plugin scaffold.
 - `plugins/opencode/agent-handoff`: OpenCode plugin scaffold.
 - `.claude-plugin/marketplace.json`: Claude Code local marketplace.
@@ -71,10 +80,10 @@ install-immediate value beyond plugin scaffolds and documentation.
 
 ## Next Steps
 
-1. Commit and push the clean-clone validation result.
-2. Try OpenCode in a company/sample repo using the CLI-generated files.
-3. Decide whether `compact` should remain report-only or offer an interactive rewrite mode.
-4. Prepare npm packaging once the OpenCode sample test passes.
+1. Run a clean-clone test after the hidden-layout change is committed.
+2. Try `.agent-handoff/` in a company/sample repo with OpenCode and Codex.
+3. Decide whether `init --layout hidden` should become the default before npm packaging.
+4. Prepare npm packaging once the hidden-layout company test passes.
 
 ## Open Questions
 

@@ -12,10 +12,14 @@ Markdown 기반 인수인계 시스템입니다. 현재 목표, 중요한 결정
 긴 AI 코딩 세션은 시간이 지나면 흐트러집니다. context가 compact되고, 새 세션은 이전 결정의 이유를 잊고, 다른 에이전트는 이미 실패한 시도를 반복할 수 있습니다.
 
 Agent Handoff는 코드와 함께 버전 관리되는 파일에 작업 상태를 보관합니다.
+회사 프로젝트에서는 루트를 깨끗하게 유지하는 hidden layout을 권장합니다.
 
-- `HANDOFF.md`: 가장 먼저 읽는 짧은 현재 상태 인덱스
-- `handoffs/*.md`: 제품, 설치, 검증, 로드맵 등 테마별 상세 기록
-- `AGENTS.md` / `CLAUDE.md`: repo 규칙을 읽는 에이전트용 프로젝트 지침
+- `.agent-handoff/HANDOFF.md`: 가장 먼저 읽는 짧은 현재 상태 인덱스
+- `.agent-handoff/handoffs/*.md`: 제품, 설치, 검증, 로드맵 등 테마별 상세 기록
+- `.agent-handoff/agents/*.md`: Codex, Claude Code, OpenCode용 에이전트별 지침
+
+기존 root layout인 `HANDOFF.md`, `handoffs/`, `AGENTS.md`, `CLAUDE.md`도
+호환성을 위해 계속 지원합니다.
 
 목표는 일반적인 AI memory가 아닙니다. 목표는 **검토 가능한 AI 코딩 세션 인수인계**입니다.
 
@@ -73,20 +77,29 @@ Agent Handoff는 여기에 다음을 더합니다.
 
 ## 빠른 시작
 
-파일 규약만 먼저 써보고 싶다면 CLI로 초기화합니다.
+회사 repo에서는 프로젝트 루트에 파일을 늘리지 않도록 hidden layout으로 초기화합니다.
 
 ```powershell
-node bin/agent-handoff.mjs init path\to\your-project
+node bin/agent-handoff.mjs init path\to\your-project --layout hidden
 node bin/agent-handoff.mjs validate path\to\your-project
 ```
 
 그 다음 새 AI 코딩 세션에서 이렇게 말합니다.
 
 ```text
-handoff
+.agent-handoff/HANDOFF.md를 먼저 읽고 이어서 작업해줘.
 ```
 
 도구별 플러그인 설치는 아래 Codex, Claude Code, OpenCode 섹션을 참고하세요.
+
+이미 예전 root layout으로 초기화했다면, 다시 초기화하기 전에 아래 생성 파일을 지우면 됩니다.
+
+```text
+HANDOFF.md
+AGENTS.md
+CLAUDE.md
+handoffs/
+```
 
 나중에 npm으로 배포하면 목표 사용법은 아래와 같습니다.
 
@@ -157,12 +170,10 @@ your-project/
 plugins/opencode/agent-handoff/index.js
 ```
 
-함께 복사하거나 프로젝트에 맞게 조정할 파일:
+함께 hidden handoff layout을 초기화합니다.
 
-```text
-AGENTS.md
-HANDOFF.md
-handoffs/
+```powershell
+node bin\agent-handoff.mjs init path\to\your-project --layout hidden
 ```
 
 나중에는 OpenCode scaffold를 npm package로 배포하고 `opencode.json`에 등록할 수 있습니다.
@@ -172,15 +183,15 @@ handoffs/
 새 agent 세션에서 아래처럼 짧게 요청합니다.
 
 ```text
-handoff
+.agent-handoff/HANDOFF.md를 먼저 읽고 이어서 작업해줘.
 ```
 
 기대 결과:
 
-1. agent가 `HANDOFF.md`를 읽습니다.
+1. agent가 `.agent-handoff/HANDOFF.md`를 읽습니다.
 2. 현재 초점과 다음 단계를 따라갑니다.
-3. 필요한 `handoffs/` 테마 파일을 읽습니다.
-4. 의미 있는 작업 후 `HANDOFF.md`를 짧게 업데이트합니다.
+3. 필요한 `.agent-handoff/handoffs/` 테마 파일을 읽습니다.
+4. 의미 있는 작업 후 `.agent-handoff/HANDOFF.md`를 짧게 업데이트합니다.
 5. 상세 기록은 관련 테마 파일에 남깁니다.
 
 구체적인 before/after 예시는 `examples/before-after.md`를 참고하세요.
@@ -190,27 +201,35 @@ handoff
 repo-local CLI는 작게 시작합니다.
 
 ```powershell
-node bin/agent-handoff.mjs init .
+node bin/agent-handoff.mjs init . --layout hidden
 node bin/agent-handoff.mjs validate .
 node bin/agent-handoff.mjs compact .
 ```
 
 명령:
 
-- `init`: `HANDOFF.md`, `handoffs/`, `AGENTS.md`, `CLAUDE.md`가 없으면 생성
+- `init`: handoff 파일을 만들되 기존 파일은 덮어쓰지 않음
+- `init --layout hidden`: `.agent-handoff/HANDOFF.md`, `.agent-handoff/handoffs/`, `.agent-handoff/agents/` 생성
+- `init --layout root`: 기존 방식인 root-level `HANDOFF.md`, `handoffs/`, `AGENTS.md`, `CLAUDE.md` 생성
 - `validate`: 필수 섹션, context file 존재 여부, 길이, secret-like 값 검사
 - `compact`: `HANDOFF.md`를 줄이거나 theme file로 옮겨야 할 내용을 report
 
 ## 테마별 Handoff
 
-`HANDOFF.md`는 첫 번째로 읽는 현재 상태 인덱스입니다. 오래 유지될 상세 기록은 테마 파일에 둡니다.
+`.agent-handoff/HANDOFF.md`는 첫 번째로 읽는 현재 상태 인덱스입니다. 오래 유지될 상세 기록은 테마 파일에 둡니다.
 
 ```text
-handoffs/
-|-- product.md
-|-- plugin-install.md
-|-- validation.md
-`-- roadmap.md
+.agent-handoff/
+|-- HANDOFF.md
+|-- agents/
+|   |-- codex.md
+|   |-- claude.md
+|   `-- opencode.md
+`-- handoffs/
+    |-- product.md
+    |-- plugin-install.md
+    |-- validation.md
+    `-- roadmap.md
 ```
 
 이 구조는 다음 에이전트가 긴 시간순 로그를 읽지 않고도 바로 현재 상태를 이해하게 해줍니다.
